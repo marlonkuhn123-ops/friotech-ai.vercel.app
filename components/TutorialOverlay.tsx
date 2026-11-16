@@ -21,7 +21,7 @@ export const TutorialOverlay: React.FC<Props> = ({ isActive, onClose, setView })
     const steps: TutorialStep[] = [
         {
             targetView: ViewState.DIAGNOSTIC,
-            title: "BEM-VINDO AO ORDEMILK TECH V85",
+            title: "BEM-VINDO AO ORDEMILK TECH V86",
             icon: "fa-solid fa-handshake",
             content: (
                 <>
