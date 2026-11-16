@@ -16,7 +16,7 @@ import { Tool_Catalog } from './components/Tool_6_Catalog';
 import { ViewState } from './types';
 import { GlobalProvider, readStoredTechData, useGlobal } from './contexts/GlobalContext';
 
-const AUTH_STORAGE_KEY = 'om_auth_time';
+const AUTH_STORAGE_KEY = 'om_auth_time_v86';
 const AUTH_SESSION_HOURS = 8;
 const hasStorage = () => typeof window !== 'undefined' && typeof window.localStorage !== 'undefined';
 const clearStoredAuthTimestamp = () => {
