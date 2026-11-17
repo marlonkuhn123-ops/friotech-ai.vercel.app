@@ -43,8 +43,8 @@ export const Header: React.FC<HeaderProps> = ({ isOnline, onStartTutorial, compa
                         <div className="min-w-0 select-none">
                             {compact && <div className="w-[78%] h-[2px] mb-[-2px] ml-auto z-10 rounded-sm bg-gray-400"></div>}
                             <h1 className="flex items-baseline gap-1.5 font-heading">
-                                <span className={`font-black italic tracking-tight leading-none ${compact ? 'text-[20px] text-white' : 'text-[18px] sm:text-[20px] text-[#000000]'}`}>OM</span>
-                                <span className={`font-black italic tracking-tight leading-none ${compact ? 'text-[13px] text-[#ff0000]' : 'text-[18px] sm:text-[20px] text-[#ff0000]'}`}>RESFRIADORES</span>
+                                <span className={`font-black tracking-tight leading-none ${compact ? 'text-[20px] text-white' : 'text-[18px] sm:text-[20px] text-white'}`}>Frio<span className="text-[#00d9ff]">Tech</span></span>
+                                <span className={`font-black tracking-wider leading-none text-[#00d9ff] ${compact ? 'text-[11px]' : 'text-[12px] sm:text-[13px]'}`}>AI ❄</span>
                             </h1>
                             {compact && <div className="w-[24%] h-[2px] mt-[-2px] bg-[#ce1126] z-10 rounded-sm"></div>}
                         </div>

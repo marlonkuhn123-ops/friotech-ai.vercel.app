@@ -39,7 +39,7 @@ const DIAGNOSTIC_FIELD_META = {
     temperature: { icon: 'fa-temperature-half', placeholder: 'Temp. atual do leite' }
 } as const;
 
-const ATTACHMENT_ANALYSIS_MARKER = '[ANEXO_TÉCNICO_ORDEMILK]';
+const ATTACHMENT_ANALYSIS_MARKER = '[ANEXO_TÉCNICO_FRIOTECH]';
 
 type SelectedSupportFile = {
     id: string;
@@ -121,7 +121,7 @@ const buildAttachmentAnalysisPrompt = (files: AttachmentPromptFile[], text?: str
         technicianText,
         `Anexos recebidos:\n${files.map(getAttachmentLabel).join('\n')}`,
         '',
-        'Analise os anexos como evidência técnica de campo da Ordemilk.',
+        'Analise os anexos como evidência técnica de campo do FrioTech / Agente AI.',
         'Se houver imagem, leia primeiro o que aparece nela: IHM/display, alarme, placa de identificação, borneira, painel, controlador, CLP, contatora, disjuntor-motor, pressostato, sensor, condensador, compressor, evaporador, visor de líquido, gelo, sujeira, vazamento ou qualquer indício visual.',
         'Se for o primeiro contato do caso, responda com hipótese inicial, duas confirmações objetivas e uma ação segura imediata. Se for continuidade, conecte o anexo ao diagnóstico em andamento e avance sem reiniciar o atendimento. Se a imagem estiver ruim, diga exatamente qual foto nova o técnico deve tirar.'
     ].join('\n');

@@ -1,7 +1,7 @@
 {
-  "short_name": "OM Tech",
-  "name": "Ordemilk Tech Assist",
-  "description": "Assistente Técnico Ordemilk - Diagnóstico Offline do Campo",
+  "short_name": "FrioTech ❄",
+  "name": "FrioTech / Agente AI",
+  "description": "FrioTech / Agente AI - Diagnóstico Inteligente de Refrigeração",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",

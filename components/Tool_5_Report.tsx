@@ -163,7 +163,7 @@ Verifique o console do navegador (F12) para ver o resultado detalhado.`);
             }
 
             const prompt = logicService.formatReportPrompt({
-                client, date, techName: techData.name || "Técnico Ordemilk",
+                client, date, techName: techData.name || "Especialista FrioTech AI",
                 model, serviceMode,
                 params: { sh: superHeat || 'N/A', sc: subCooling || 'N/A', temp: finalTemp || 'N/A' },
                 procedureText, obs

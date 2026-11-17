@@ -49,7 +49,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, installPrompt
         }
 
         if (inputPass === APP_ACCESS_PASSWORD) {
-            onLogin({ name: inputName, company: 'Ordemilk' });
+            onLogin({ name: inputName, company: 'FrioTech' });
             return;
         }
 
@@ -146,7 +146,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, installPrompt
 
                     <div className="flex flex-col items-center">
                         <h1 className="flex items-baseline gap-2 mb-1">
-                            <span className="font-inter font-black italic text-2xl tracking-tighter leading-none text-[#ce1126]">TECH V86</span>
+                            <span className="font-inter font-black tracking-wider text-xl leading-none text-[#00d9ff]">AGENTE AI <span className="text-white/60 text-sm">V86</span></span>
                         </h1>
                         <p className="mt-2 text-[10px] font-bold uppercase tracking-[0.3em] text-[#E8EAF6]/60">{'Terminal T\u00e9cnico Privado'}</p>
                     </div>
@@ -200,7 +200,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, installPrompt
                 </Card>
 
                 <div className="mt-8 text-center opacity-20">
-                    <p className="text-[9px] font-mono text-gray-600 tracking-widest uppercase">{'Ordemilk Engineering \u00a9 2026'}</p>
+                    <p className="text-[9px] font-mono text-gray-600 tracking-widest uppercase">{'FrioTech AI Platform \u00a9 2026'}</p>
                 </div>
             </div>
 
