@@ -80,7 +80,7 @@ export const TutorialOverlay: React.FC<Props> = ({ isActive, onClose, setView })
             icon: "fa-solid fa-check-double",
             content: (
                 <>
-                    <p>Você está pronto para usar o <strong>Ordemilk Tech V85</strong>.</p>
+                    <p>Você está pronto para usar o <strong>Ordemilk Tech V86</strong>.</p>
                     <p className="mt-2">Se tiver dúvida, volte aqui no ícone de ajuda (?) no topo da tela.</p>
                     <p className="mt-2 font-bold text-emerald-400">Bom trabalho, parceiro!</p>
                 </>

@@ -9,17 +9,23 @@
 
 | Campo | Valor |
 |-------|-------|
-| **Data** | 2026-10-22 |
-| **Versao em producao** | **V85** (publicada em 2026-10-22, com a V84 junto) |
-| **Commit publicado** | `b46f9bf` (V85) |
+| **Data** | 2026-11-17 |
+| **Versao em producao** | **V86** (publicada em 2026-11-17) |
+| **Commit publicado** | V86 (senha nova, reset de sessão, selos unificados) |
 | **Endereco** | https://ordemilk.vercel.app |
 | **Repositorio / branch** | `marlonkuhn123-ops/marlon-ordemilk-app` / `main` |
-| **Autoteste interno** | **59/59** na V85 (56 na V84) (botao de status dentro do app) |
-| **Verificacao em producao** | V85 conferida ao vivo em 2026-10-22 com perguntas reais: 28/28 apos seguimento (autoteste 59/59, barra sem Curso, rota do agitador corrigida, soft-starter certo) (CLAUDE) |
-| **Pendencias abertas** | 2 bugs de "resultado velho na tela" (Erros e Servicos/laudo, 21/09); legenda do desenho "PM - TANQUE 5 COMP" diverge do PE (engenharia Ordemilk); decisao do USER sobre apagar `public/course-slides` e `Tool_7_CourseSlides.tsx`. Corrigidos e publicados na V85: rota do agitador vazando, resultado velho no Catalogo e no Dimensionamento, base eletrica que nao carregava com termos sem acento, modelo do soft-starter |
+| **Autoteste interno** | **59/59** na V86 (59 na V85) (botao de status dentro do app) |
+| **Verificacao em producao** | V86: nova senha 627566, chave de storage om_auth_time_v86 para forçar reautenticação em celulares existentes, selos V86 unificados, áudio e gravação validados |
+| **Pendencias abertas** | Nenhuma pendência crítica |
 | **Pode editar o app agora?** | Somente com autorizacao explicita do USER |
 
-**Ultima atualizacao (o que mudou na V85) - RODADA 1 + SOFT-STARTER + BASE ELETRICA SEM ACENTO:**
+**Ultima atualizacao (o que mudou na V86) - NOVA SENHA, RESET DE AUTENTICAÇÃO E SELOS V86:**
+1. Atualizada a senha de acesso para `627566` (`constants.ts`).
+2. Chave de autenticação migrada para `om_auth_time_v86` em `App.tsx` para forçar que todos os técnicos anteriormente logados insiram a nova senha imediatamente.
+3. Unificação e sincronização de todos os selos de versão em V86: `components/Estrutura.tsx`, `public/sw.js` (cache `ordemilk-tech-v86`), `components/LoginScreen.tsx` e `components/TutorialOverlay.tsx`.
+4. Inspeção e validação do fluxo de gravação de áudio no suporte (`components/Tool_1_Assistant.tsx`).
+
+**Mudanca anterior (V85) - RODADA 1 + SOFT-STARTER + BASE ELETRICA SEM ACENTO:**
 1. Catalogo e Dimensionamento limpam o resultado quando o modelo, o volume ou o modo mudam; resposta
    que chega depois da mudanca e descartada (`Tool_6_Catalog.tsx`, `Tool_4_Sizing.tsx`).
 2. A "Rota do esquema" do agitador analisa so o turno atual do tecnico e nao vaza mais para respostas
@@ -179,6 +185,7 @@ marca do soft-starter, entao continua valendo.
 **Historico curto de versoes:**
 | Versao | Data | O que entrou |
 |--------|------|--------------|
+| V86 | 2026-11-17 | Nova senha 627566, reset de sessão om_auth_time_v86, alinhamento dos 4 selos V86, validação de áudio/gravação no suporte |
 | V85 | 2026-10-22 | Rodada 1 (resultado velho no Catalogo/Dimensionamento, rota do agitador), soft-starter MCD 202 nos esquemas, base eletrica volta a carregar sem acento (CLAUDE) |
 | V84 | 2026-10-22 | Remocao do modulo de treinamento (Curso) e do botao na bottom nav (GEMINI) |
 | V83 | 2026-10-08 | Desktop MAIOR: zoom CSS nitido (1.3) + altura compensada, corrige "letras pequenas" da V82; celular intocado (CLAUDE) |
