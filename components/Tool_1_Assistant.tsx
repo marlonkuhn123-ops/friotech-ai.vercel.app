@@ -860,7 +860,24 @@ export const Tool_Assistant: React.FC = () => {
 
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            const recorder = new MediaRecorder(stream);
+
+            // Identifica o melhor formato de gravação suportado pelo dispositivo/navegador
+            let options: MediaRecorderOptions = {};
+            if (typeof MediaRecorder.isTypeSupported === 'function') {
+                const preferredMimes = [
+                    'audio/webm;codecs=opus',
+                    'audio/webm',
+                    'audio/mp4',
+                    'audio/aac',
+                    'audio/ogg;codecs=opus'
+                ];
+                const supportedMime = preferredMimes.find(mime => MediaRecorder.isTypeSupported(mime));
+                if (supportedMime) {
+                    options = { mimeType: supportedMime };
+                }
+            }
+
+            const recorder = new MediaRecorder(stream, options);
             mediaStreamRef.current = stream;
             mediaRecorderRef.current = recorder;
             audioChunksRef.current = [];
@@ -877,27 +894,43 @@ export const Tool_Assistant: React.FC = () => {
                 }
 
                 try {
-                    const rawAudio = new Blob(audioChunksRef.current, { type: recorder.mimeType || 'audio/webm' });
-                    const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
-                    const audioContext: AudioContext = new AudioContextClass();
-                    const audioBuffer = await audioContext.decodeAudioData(await rawAudio.arrayBuffer());
-                    await audioContext.close();
-                    const wavAudio = encodeWav(audioBuffer);
-                    const reader = new FileReader();
+                    const recordedMime = recorder.mimeType || options.mimeType || 'audio/webm';
+                    const rawAudio = new Blob(audioChunksRef.current, { type: recordedMime });
 
+                    let finalAudioBlob: Blob = rawAudio;
+                    let finalMime: string = recordedMime;
+                    let finalExt: string = recordedMime.includes('mp4') || recordedMime.includes('aac') ? 'm4a' : 'webm';
+
+                    // Tenta converter para WAV se AudioContext estiver disponível e suportar decodificação
+                    const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+                    if (AudioContextClass) {
+                        try {
+                            const audioContext: AudioContext = new AudioContextClass();
+                            const audioBuffer = await audioContext.decodeAudioData(await rawAudio.arrayBuffer());
+                            await audioContext.close();
+                            finalAudioBlob = encodeWav(audioBuffer);
+                            finalMime = 'audio/wav';
+                            finalExt = 'wav';
+                        } catch (decodeErr) {
+                            console.warn('[Tool_1_Assistant] Conversão WAV indisponível no dispositivo, usando áudio nativo:', decodeErr);
+                            // Mantém o áudio gravado nativamente
+                        }
+                    }
+
+                    const reader = new FileReader();
                     reader.onloadend = () => {
                         const audioFile: SelectedSupportFile = {
                             id: createSupportId(),
-                            name: `audio-campo-${new Date().toISOString().replace(/[:.]/g, '-')}.wav`,
+                            name: `audio-campo-${new Date().toISOString().replace(/[:.]/g, '-')}.${finalExt}`,
                             data: reader.result as string,
-                            mime: 'audio/wav',
+                            mime: finalMime,
                             type: 'audio'
                         };
                         setSelectedFiles(prev => [...prev, audioFile]);
                         setPendingAttachmentMeta(prev => [...prev, ...buildAttachmentMeta([audioFile])]);
                     };
                     reader.onerror = () => showSupportAlert('Não consegui anexar o áudio gravado. Tente novamente.');
-                    reader.readAsDataURL(wavAudio);
+                    reader.readAsDataURL(finalAudioBlob);
                 } catch (error) {
                     console.warn('[Tool_1_Assistant] Falha ao processar áudio gravado:', error);
                     showSupportAlert('Não consegui processar o áudio gravado. Tente novamente.');
