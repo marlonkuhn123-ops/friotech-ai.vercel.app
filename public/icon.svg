@@ -1,6 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="100" fill="#0A0F1C"/>
-  <rect x="56" y="56" width="400" height="400" rx="60" fill="none" stroke="#00D9FF" stroke-width="20"/>
-  <text x="50%" y="52%" font-family="Arial, sans-serif" font-weight="bold" font-size="185" fill="#00D9FF" text-anchor="middle" dominant-baseline="middle">FT</text>
-  <text x="50%" y="80%" font-family="Arial, sans-serif" font-weight="bold" font-size="56" fill="#FFFFFF" text-anchor="middle" dominant-baseline="middle">AI ❄</text>
+  <rect width="512" height="512" rx="100" fill="#000000"/>
+  <rect x="44" y="44" width="424" height="424" rx="68" fill="none" stroke="#00D9FF" stroke-width="18"/>
+  <text x="50%" y="53%" font-family="Arial, Helvetica, sans-serif" font-weight="900" font-size="96" letter-spacing="-2" fill="#00D9FF" text-anchor="middle" dominant-baseline="middle">FRIOAI</text>
 </svg>

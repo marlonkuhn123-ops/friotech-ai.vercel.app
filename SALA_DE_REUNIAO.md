@@ -10,16 +10,21 @@
 | Campo | Valor |
 |-------|-------|
 | **Data** | 2026-11-18 |
-| **Versao em producao** | **V87** (publicada em 2026-11-18) |
-| **Commit publicado** | V87 (rebranding completo FrioTech / Agente AI ❄, logo login, icone PWA, selos V87) |
+| **Versao em producao** | **V88** (publicada em 2026-11-18) |
+| **Commit publicado** | V88 (icone PWA FRIOAI em fundo preto e letras azuis, selos V88) |
 | **Endereco** | https://friotech-ai.vercel.app (e https://ordemilk.vercel.app) |
 | **Repositorio / branch** | `marlonkuhn123-ops/friotech-ai.vercel.app` (`marlon-ordemilk-app`) / `main` |
-| **Autoteste interno** | **59/59** na V87 (59 na V86) (botao de status dentro do app) |
-| **Verificacao em producao** | V87: marca 100% atualizada para FrioTech / Agente AI ❄ (Login, Marca d'água, Ícone PWA, Prompts IA, BOM), 4 selos V87 unificados |
+| **Autoteste interno** | **59/59** na V88 (59 na V87) (botao de status dentro do app) |
+| **Verificacao em producao** | V88: icone PWA FRIOAI fundo preto letras azuis, marca 100% FrioTech / Agente AI ❄, 4 selos V88 unificados |
 | **Pendencias abertas** | Nenhuma pendência crítica |
 | **Pode editar o app agora?** | Somente com autorizacao explicita do USER |
 
-**Ultima atualizacao (o que mudou na V87) - REBRANDING COMPLETO FRIOTECH / AGENTE AI ❄ E SELOS V87:**
+**Ultima atualizacao (o que mudou na V88) - ICONE PWA FRIOAI (FUNDO PRETO, LETRAS EM AZUL) E SELOS V88:**
+1. Atualizado `public/icon.svg` para exibir `FRIOAI` em letras azuis (`#00D9FF`) sobre fundo preto (`#000000`), conforme solicitado pelo USER.
+2. Atualizado `public/manifest.json` (`short_name: "FRIOAI"`, cache-busting `/icon.svg?v=88`) e adicionado `<link rel="icon">` / `<link rel="apple-touch-icon">` em `index.html`.
+3. Alinhados os 4 selos obrigatorios em **V88**: `components/Estrutura.tsx` (`V88.0`), `public/sw.js` (`friotech-ai-v88`), `components/LoginScreen.tsx` (`V88`) e `components/TutorialOverlay.tsx` (`V88` x2).
+
+**Mudanca anterior (o que mudou na V87) - REBRANDING COMPLETO FRIOTECH / AGENTE AI ❄ E SELOS V87:**
 1. Substituido o bloco de logo na tela de login (`components/LoginScreen.tsx`) pelo badge oficial `FrioTech ❄`, a marca d'agua (`components/UI.tsx`) para `FRIOTECH AI • PROPRIEDADE PRIVADA` e o icone PWA (`public/icon.svg`) para `FT / AI ❄`.
 2. Removidas 100% das referencias ao nome antigo nos prompts e bases de dados da IA (`services/geminiService.ts`, `constants.ts`, `data/*.ts`), catalogo (`bom_database.ts`, `public/data/bom_database.json`) e metadados (`package.json`, `metadata.json`, `README.md`).
 3. Alinhados os 4 selos obrigatorios de versao/cache em **V87**: `components/Estrutura.tsx` (`V87.0`), `public/sw.js` (`friotech-ai-v87`), `components/LoginScreen.tsx` (`V87`) e `components/TutorialOverlay.tsx` (`V87` x2).
