@@ -1,10 +1,12 @@
-const CACHE_NAME = 'friotech-ai-v89';
+const CACHE_NAME = 'friotech-ai-v90';
 const ASSETS = [
     '/',
     '/index.html',
     '/index.js',
     '/manifest.json',
-    '/icon.svg'
+    '/icon.svg',
+    '/icon-192.png',
+    '/icon-512.png'
 ];
 
 self.addEventListener('install', (event) => {
