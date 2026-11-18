@@ -10,16 +10,22 @@
 | Campo | Valor |
 |-------|-------|
 | **Data** | 2026-11-18 |
-| **Versao em producao** | **V91** (publicada em 2026-11-18) |
-| **Commit publicado** | V91 (icone PWA ❄AI com floco de neve cristalino e AI em azul sobre fundo preto, selos V91) |
+| **Versao em producao** | **V92** (publicada em 2026-11-18) |
+| **Commit publicado** | V92 (upgrade completo de captacao e interpretacao de audio no suporte: ganho automatico WAV, transcricao fonetica paralela, base eletrica/esquemas ativa em audio e raciocinio medium, selos V92) |
 | **Endereco** | https://friotech-ai.vercel.app (exclusivo; dominios antigos bloqueados) |
 | **Repositorio / branch** | `marlonkuhn123-ops/friotech-ai.vercel.app` / `main` |
-| **Autoteste interno** | **59/59** na V91 (59 na V90) (botao de status dentro do app) |
-| **Verificacao em producao** | V91: icones PNG reais ❄AI (fundo preto, simbolo ❄AI em azul), 4 selos V91 unificados |
+| **Autoteste interno** | **59/59** na V92 (59 na V91) (botao de status dentro do app) |
+| **Verificacao em producao** | V92: audio do suporte com normalizacao de ganho, transcricao auxiliar, base completa e protocolo fonetico, 4 selos V92 unificados |
 | **Pendencias abertas** | Nenhuma pendência crítica |
 | **Pode editar o app agora?** | Somente com autorizacao explicita do USER |
 
-**Ultima atualizacao (o que mudou na V91) - ICONE PWA ❄AI (SOMENTE SIMBOLO ❄AI EM AZUL SOBRE FUNDO PRETO):**
+**Ultima atualizacao (o que mudou na V92) - UPGRADE COMPLETO DO MICROFONE E INTERPRETACAO DE AUDIO NO SUPORTE:**
+1. **Captacao e Normalizacao de Ganho (`Tool_1_Assistant.tsx`):** `getUserMedia` com filtros de voz (`echoCancellation`, `noiseSuppression`, `autoGainControl`, `channelCount: 1`), `recorder.start(250)` + `requestData()` para nao cortar o final da fala, e **Peak Normalization automatica no `encodeWav`** (amplifica automaticamente audios baixos gravados longe do celular e remove DC offset).
+2. **Transcricao Fonetica Auxiliar em Paralelo (`SpeechRecognition` pt-BR):** Enquanto grava o audio real, captura em paralelo a transcricao com dicionario fonetico (`R-404A`, `R-22`, `R-407C`, `CLP`, `IHM`, `A1/A2`, `RL6`, `RL18`, `saida YE/YC`, `superaquecimento`, `sub-resfriamento`), permitindo que os motores deterministicos (`analyzeSupportCase`, `ensureElectricalSchematicRoute`) e o historico entre turnos funcionem tambem por voz.
+3. **Base Eletrica/Esquemas Completa + Thinking Medium em Audio (`geminiService.ts`):** Antes, quando o tecnico enviava so audio (sem digitar palavras-chave), `getElectricalContext` retornava vazio e a IA ficava sem os esquemas eletricos. Agora, qualquer mensagem com anexo de audio ativa automaticamente a base eletrica + esquemas + base estendida + protocolo fonetico de campo e `thinkingLevel: "medium"`.
+4. Alinhados os 4 selos obrigatorios em **V92**: `components/Estrutura.tsx` (`V92.0`), `public/sw.js` (`friotech-ai-v92`), `components/LoginScreen.tsx` (`V92`) e `components/TutorialOverlay.tsx` (`V92` x2).
+
+**Mudanca anterior (o que mudou na V91) - ICONE PWA ❄AI (SOMENTE SIMBOLO ❄AI EM AZUL SOBRE FUNDO PRETO):**
 1. Refeitos os icones `public/icon-192.png`, `public/icon-512.png` e `public/icon.svg` retirando `FRIOAI` e deixando exclusivamente o simbolo **`❄AI`** (floco de neve geometrico + `AI` em gradiente azul gelo com brilho suave sobre fundo preto profundo).
 2. Atualizados `public/manifest.json` (`short_name: "❄AI"`, `?v=91`) e `index.html` (`?v=91`).
 3. Alinhados os 4 selos obrigatorios em **V91**: `components/Estrutura.tsx` (`V91.0`), `public/sw.js` (`friotech-ai-v91`), `components/LoginScreen.tsx` (`V91`) e `components/TutorialOverlay.tsx` (`V91` x2).

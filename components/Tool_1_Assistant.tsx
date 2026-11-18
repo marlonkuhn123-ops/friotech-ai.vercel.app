@@ -47,12 +47,34 @@ type SelectedSupportFile = {
     data: string;
     mime: string;
     type: 'image' | 'audio';
+    transcript?: string;
 };
 
 type AttachmentPromptFile = {
     name?: string;
     mime: string;
     type: 'image' | 'audio';
+    transcript?: string;
+};
+
+const normalizeSpokenTechnicalTerms = (raw: string): string => {
+    if (!raw.trim()) return '';
+    return raw
+        .replace(/\b(?:erre|r)\s*404\s*a?\b/gi, 'R-404A')
+        .replace(/\b(?:erre|r)\s*407\s*c?\b/gi, 'R-407C')
+        .replace(/\b(?:erre|r)\s*22\b/gi, 'R-22')
+        .replace(/\bc\s*l\s*p\b/gi, 'CLP')
+        .replace(/\bi\s*h\s*m\b/gi, 'IHM')
+        .replace(/\ba\s*(?:1|um)\s*a\s*(?:2|dois)\b/gi, 'A1/A2')
+        .replace(/\b(?:erre\s*ele|r\s*l)\s*(?:6|meia)\b/gi, 'RL6')
+        .replace(/\b(?:erre\s*ele|r\s*l)\s*18\b/gi, 'RL18')
+        .replace(/\b(?:erre\s*ele|r\s*l)\s*16\b/gi, 'RL16')
+        .replace(/\bsa[ií]da\s*(?:ipsilon|y)\s*e\b/gi, 'saída YE')
+        .replace(/\bsa[ií]da\s*(?:ipsilon|y)\s*c\b/gi, 'saída YC')
+        .replace(/\bsuper\s+aquecimento\b/gi, 'superaquecimento')
+        .replace(/\bsub\s+resfriamento\b/gi, 'sub-resfriamento')
+        .replace(/\b(?:v\s*e\s*t|t\s*x\s*v)\b/gi, 'válvula de expansão')
+        .trim();
 };
 
 const createSupportId = () =>
@@ -112,8 +134,20 @@ const getAttachmentLabel = (file: AttachmentPromptFile, index: number) => {
 const buildAttachmentAnalysisPrompt = (files: AttachmentPromptFile[], text?: string) => {
     const userText = text?.trim();
     const visiblePlaceholder = userText?.startsWith('[');
-    const technicianText = userText && !visiblePlaceholder
-        ? `Relato do técnico: ${userText}`
+    const audioTranscripts = files
+        .filter(f => f.type === 'audio' && f.transcript?.trim())
+        .map(f => f.transcript!.trim())
+        .join(' ');
+    const hasAudio = files.some(f => f.type === 'audio');
+    const hasImage = files.some(f => f.type === 'image');
+
+    const effectiveSpokenOrTyped = [
+        userText && !visiblePlaceholder ? userText : '',
+        audioTranscripts ? `(Transcrição auxiliar do áudio: "${audioTranscripts}")` : ''
+    ].filter(Boolean).join(' ');
+
+    const technicianText = effectiveSpokenOrTyped
+        ? `Relato do técnico: ${effectiveSpokenOrTyped}`
         : 'O técnico enviou anexo(s) para análise técnica.';
 
     return [
@@ -122,12 +156,25 @@ const buildAttachmentAnalysisPrompt = (files: AttachmentPromptFile[], text?: str
         `Anexos recebidos:\n${files.map(getAttachmentLabel).join('\n')}`,
         '',
         'Analise os anexos como evidência técnica de campo do FrioTech / Agente AI.',
-        'Se houver imagem, leia primeiro o que aparece nela: IHM/display, alarme, placa de identificação, borneira, painel, controlador, CLP, contatora, disjuntor-motor, pressostato, sensor, condensador, compressor, evaporador, visor de líquido, gelo, sujeira, vazamento ou qualquer indício visual.',
-        'Se for o primeiro contato do caso, responda com hipótese inicial, duas confirmações objetivas e uma ação segura imediata. Se for continuidade, conecte o anexo ao diagnóstico em andamento e avance sem reiniciar o atendimento. Se a imagem estiver ruim, diga exatamente qual foto nova o técnico deve tirar.'
-    ].join('\n');
+        hasAudio
+            ? 'ATENÇÃO ESPECIAL PARA ÁUDIO: Ouça o arquivo de áudio completo com máxima atenção do início ao fim. O técnico está em ambiente de fazenda/sala de resfriamento de leite (pode haver ruído de fundo de compressor ou ordenha). Transcreva mentalmente toda a fala em português brasileiro e interprete corretamente os termos de campo falados: fluidos (R-404A, R-22, R-407C), pressões em PSI/libras (sucção/baixa e descarga/alta), temperaturas em graus, superaquecimento (Sup.Aque), sub-resfriamento (Sub.Res), válvula de expansão, filtro secador, visor de líquido, CLP Panasonic, IHM, controladores Full Gauge/Ageon, contatoras (K1..K4, A1/A2), relés (RL1, RL6, RL16, RL18), saídas do CLP (YE agitador, YC compressor), disjuntor-motor (DM), relé falta de fase (RFF), soft-starter Danfoss MCD 202, bomba CIP e agitador. Se houver som mecânico/elétrico gravado (contatora batendo, compressor roncando/desarmando), considere isso na análise. Responda diretamente ao que o técnico perguntou ou relatou no áudio!'
+            : '',
+        hasImage
+            ? 'Se houver imagem, leia primeiro o que aparece nela: IHM/display, alarme, placa de identificação, borneira, painel, controlador, CLP, contatora, disjuntor-motor, pressostato, sensor, condensador, compressor, evaporador, visor de líquido, gelo, sujeira, vazamento ou qualquer indício visual.'
+            : '',
+        'Se for o primeiro contato do caso, responda com hipótese inicial, duas confirmações objetivas e uma ação segura imediata. Se for continuidade, conecte o anexo ao diagnóstico em andamento e avance sem reiniciar o atendimento. Se o áudio estiver inaudível ou a imagem estiver ruim, avise objetivamente o que faltou.'
+    ].filter(Boolean).join('\n');
 };
 
 const buildAttachmentDisplayText = (files: AttachmentPromptFile[]) => {
+    const audioTranscripts = files
+        .filter(file => file.type === 'audio' && file.transcript?.trim())
+        .map(file => file.transcript!.trim())
+        .join(' ');
+    if (audioTranscripts) {
+        return `🎤 ${audioTranscripts}`;
+    }
+
     const imageCount = files.filter(file => file.type === 'image').length;
     const audioCount = files.filter(file => file.type === 'audio').length;
     const parts = [
@@ -607,6 +654,8 @@ export const Tool_Assistant: React.FC = () => {
     const cameraInputRef = useRef<HTMLInputElement>(null);
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     const mediaStreamRef = useRef<MediaStream | null>(null);
+    const speechRecognitionRef = useRef<any>(null);
+    const speechTranscriptRef = useRef<string>('');
     const audioChunksRef = useRef<Blob[]>([]);
     const recordTimerRef = useRef<number | null>(null);
     const shouldSaveRecordingRef = useRef(true);
@@ -781,6 +830,31 @@ export const Tool_Assistant: React.FC = () => {
             }
         }
 
+        // Remove DC offset e aplica normalizacao automatica de ganho (Peak Normalization)
+        // para que audios falados baixo ou longe do celular cheguem nitidos e altos para a IA
+        if (length > 0) {
+            let sum = 0;
+            for (let index = 0; index < length; index += 1) {
+                sum += mono[index];
+            }
+            const dcOffset = sum / length;
+
+            let maxPeak = 0;
+            for (let index = 0; index < length; index += 1) {
+                mono[index] -= dcOffset;
+                const abs = Math.abs(mono[index]);
+                if (abs > maxPeak) maxPeak = abs;
+            }
+
+            if (maxPeak > 0.015 && maxPeak < 0.88) {
+                const targetGain = Math.min(4.5, 0.90 / maxPeak);
+                for (let index = 0; index < length; index += 1) {
+                    const boosted = mono[index] * targetGain;
+                    mono[index] = Math.abs(boosted) > 0.95 ? Math.tanh(boosted) : boosted;
+                }
+            }
+        }
+
         const buffer = new ArrayBuffer(44 + length * 2);
         const view = new DataView(buffer);
         const writeString = (offset: number, value: string) => {
@@ -819,6 +893,15 @@ export const Tool_Assistant: React.FC = () => {
             recordTimerRef.current = null;
         }
 
+        if (speechRecognitionRef.current) {
+            try {
+                speechRecognitionRef.current.stop();
+            } catch (e) {
+                // ignore stop error
+            }
+            speechRecognitionRef.current = null;
+        }
+
         mediaStreamRef.current?.getTracks().forEach(track => track.stop());
         mediaStreamRef.current = null;
         mediaRecorderRef.current = null;
@@ -837,8 +920,23 @@ export const Tool_Assistant: React.FC = () => {
             recordTimerRef.current = null;
         }
 
+        if (speechRecognitionRef.current) {
+            try {
+                speechRecognitionRef.current.stop();
+            } catch (e) {
+                // ignore
+            }
+        }
+
         const recorder = mediaRecorderRef.current;
         if (recorder && recorder.state !== 'inactive') {
+            try {
+                if (typeof recorder.requestData === 'function') {
+                    recorder.requestData();
+                }
+            } catch (e) {
+                // ignore requestData error
+            }
             recorder.stop();
             return;
         }
@@ -859,7 +957,19 @@ export const Tool_Assistant: React.FC = () => {
         }
 
         try {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            let stream: MediaStream;
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({
+                    audio: {
+                        echoCancellation: true,
+                        noiseSuppression: true,
+                        autoGainControl: true,
+                        channelCount: 1
+                    }
+                });
+            } catch {
+                stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            }
 
             // Identifica o melhor formato de gravação suportado pelo dispositivo/navegador
             let options: MediaRecorderOptions = {};
@@ -873,15 +983,47 @@ export const Tool_Assistant: React.FC = () => {
                 ];
                 const supportedMime = preferredMimes.find(mime => MediaRecorder.isTypeSupported(mime));
                 if (supportedMime) {
-                    options = { mimeType: supportedMime };
+                    options = { mimeType: supportedMime, audioBitsPerSecond: 128000 };
                 }
             }
 
-            const recorder = new MediaRecorder(stream, options);
+            let recorder: MediaRecorder;
+            try {
+                recorder = new MediaRecorder(stream, options);
+            } catch {
+                recorder = new MediaRecorder(stream);
+            }
             mediaStreamRef.current = stream;
             mediaRecorderRef.current = recorder;
             audioChunksRef.current = [];
+            speechTranscriptRef.current = '';
             shouldSaveRecordingRef.current = true;
+
+            // Transcrição auxiliar em paralelo (quando suportada pelo navegador) para reforçar
+            // os motores determinísticos locais sem interferir no áudio real enviado ao Gemini
+            try {
+                const SpeechRecognitionClass =
+                    (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+                if (SpeechRecognitionClass) {
+                    const recognition = new SpeechRecognitionClass();
+                    recognition.lang = 'pt-BR';
+                    recognition.continuous = true;
+                    recognition.interimResults = true;
+                    recognition.onresult = (event: any) => {
+                        const pieces: string[] = [];
+                        for (let i = 0; i < event.results.length; i += 1) {
+                            const piece = event.results[i]?.[0]?.transcript;
+                            if (piece) pieces.push(piece.trim());
+                        }
+                        speechTranscriptRef.current = normalizeSpokenTechnicalTerms(pieces.join(' '));
+                    };
+                    recognition.onerror = () => undefined;
+                    recognition.start();
+                    speechRecognitionRef.current = recognition;
+                }
+            } catch {
+                // Ignora caso o navegador não permita SpeechRecognition simultâneo
+            }
 
             recorder.ondataavailable = (event) => {
                 if (event.data?.size) audioChunksRef.current.push(event.data);
@@ -901,7 +1043,7 @@ export const Tool_Assistant: React.FC = () => {
                     let finalMime: string = recordedMime;
                     let finalExt: string = recordedMime.includes('mp4') || recordedMime.includes('aac') ? 'm4a' : 'webm';
 
-                    // Tenta converter para WAV se AudioContext estiver disponível e suportar decodificação
+                    // Tenta converter para WAV normalizado se AudioContext estiver disponível
                     const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
                     if (AudioContextClass) {
                         try {
@@ -913,10 +1055,10 @@ export const Tool_Assistant: React.FC = () => {
                             finalExt = 'wav';
                         } catch (decodeErr) {
                             console.warn('[Tool_1_Assistant] Conversão WAV indisponível no dispositivo, usando áudio nativo:', decodeErr);
-                            // Mantém o áudio gravado nativamente
                         }
                     }
 
+                    const capturedTranscript = normalizeSpokenTechnicalTerms(speechTranscriptRef.current);
                     const reader = new FileReader();
                     reader.onloadend = () => {
                         const audioFile: SelectedSupportFile = {
@@ -924,7 +1066,8 @@ export const Tool_Assistant: React.FC = () => {
                             name: `audio-campo-${new Date().toISOString().replace(/[:.]/g, '-')}.${finalExt}`,
                             data: reader.result as string,
                             mime: finalMime,
-                            type: 'audio'
+                            type: 'audio',
+                            transcript: capturedTranscript || undefined
                         };
                         setSelectedFiles(prev => [...prev, audioFile]);
                         setPendingAttachmentMeta(prev => [...prev, ...buildAttachmentMeta([audioFile])]);
@@ -939,7 +1082,7 @@ export const Tool_Assistant: React.FC = () => {
                 }
             };
 
-            recorder.start();
+            recorder.start(250);
             setRecordSeconds(0);
             setIsRecording(true);
             recordTimerRef.current = window.setInterval(() => {

@@ -147,8 +147,13 @@ export const needsElectricalContext = (userPrompt: string) => {
   return ELECTRICAL_CONTEXT_KEYWORDS.some(k => upper.includes(k));
 };
 
+const hasAudioAttachmentInPrompt = (userPrompt: string) =>
+  userPrompt.includes(ATTACHMENT_ANALYSIS_MARKER) && /\baudio\b/i.test(userPrompt);
+
 const getElectricalContext = async (userPrompt: string) => {
-  if (needsElectricalContext(userPrompt)) {
+  // Quando há anexo de áudio, ativamos sempre a base elétrica e de esquemas, pois a pergunta
+  // está dentro do áudio gravado e o técnico pode falar sobre CLP, contatora, agitador ou bornes.
+  if (needsElectricalContext(userPrompt) || hasAudioAttachmentInPrompt(userPrompt)) {
     // Carrega as bases apenas se necessário (Lazy Loading) com cache
     if (!cachedElectricalData) {
       const { ELECTRICAL_DATABASE } = await import("../data/electrical_data");
@@ -316,23 +321,40 @@ const getAttachmentContextInstruction = (
 ) => {
   if (!userPrompt.includes(ATTACHMENT_ANALYSIS_MARKER)) return "";
 
+  const audioProtocol = hasAudioAttachmentInPrompt(userPrompt)
+    ? `
+
+[PROTOCOLO DE ESCUTA E INTERPRETAÇÃO DE ÁUDIO DE CAMPO - PRIORIDADE MÁXIMA]
+- O técnico gravou um áudio no cliente (pode haver barulho de compressor, ordenha ou vento ao fundo).
+- Ouça atentamente do primeiro ao último segundo. Extraia todos os dados falados pelo técnico (capacidade do tanque em litros, tensão 220V/380V, fluido R-22/R-404A/R-407C, pressões de sucção/descarga em PSI ou libras, temperaturas, superaquecimento, sub-resfriamento e sintomas elétricos/frigoríficos).
+- DICIONÁRIO FONÉTICO DE CAMPO (corrija variações de pronúncia):
+  * "erre 404" / "quatrocentos e quatro" -> R-404A | "erre 22" -> R-22 | "erre 407" -> R-407C
+  * "c l p" / "panasonic" -> CLP Panasonic | "i h m" -> IHM | "full gauge" / "mt50" -> Full Gauge MT-50 | "ageon" -> Ageon
+  * "a um a dois" / "a1 a2" -> bornes A1/A2 da bobina da contatora
+  * "erre ele 6" / "rl meia" -> relé RL6 | "erre ele 18" -> relé RL18 | "erre ele 16" -> relé RL16 | "erre ele 1" -> relé de nível RL1 (bomba CIP)
+  * "saída ipsilon e" / "saída ye" -> saída YE do CLP (agitador) | "saída yc" -> saída YC do CLP (compressor)
+  * "dê eme" / "disjuntor motor" -> disjuntor-motor (DM) | "erre efe efe" -> relé falta de fase (RFF)
+  * "vê e tê" / "tê xis vê" -> válvula de expansão (escreva sempre por extenso)
+- Responda conectando diretamente ao que o técnico disse no áudio, sem respostas genéricas.`
+    : "";
+
   if (mode === 'REF') {
     return `
 
 [LEITURA TÉCNICA DE ANEXOS - REFRIGERAÇÃO]
 O técnico enviou anexo(s) como evidência de campo. Não trate isso como pergunta vaga.
-Antes de diagnosticar, extraia sinais frigoríficos concretos do anexo: modelo do equipamento, fluido, pressões, manifold, visor de líquido, condensador, ventilador, evaporador, gelo, sucção, linha de líquido, óleo, sujeira, vazamento, placa do compressor e temperatura exibida.
-Se a imagem não permitir leitura confiável, diga isso objetivamente e peça a foto exata que falta.
-Mesmo na primeira resposta, use a evidência visual para formular uma hipótese inicial técnica, mantendo a resposta curta.`;
+Antes de diagnosticar, extraia sinais frigoríficos concretos do anexo (áudio ou imagem): modelo do equipamento, fluido, pressões, manifold, visor de líquido, condensador, ventilador, evaporador, gelo, sucção, linha de líquido, óleo, sujeira, vazamento, placa do compressor e temperatura informada.
+Se o anexo não permitir leitura/escuta confiável, diga isso objetivamente.
+Mesmo na primeira resposta, use a evidência do anexo para formular uma hipótese inicial técnica precisa.${audioProtocol}`;
   }
 
   return `
 
 [LEITURA TÉCNICA DE ANEXOS - REGRA OBRIGATÓRIA]
 O técnico enviou anexo(s) como evidência de campo. Não trate isso como pergunta vaga.
-Antes de diagnosticar, extraia sinais concretos do anexo: display/IHM, alarme, placa, modelo, tensão, borneira, painel, CLP, controlador, contatora, disjuntor-motor, pressostato, sensor, compressor, condensador, evaporador, gelo, sujeira, vazamento, oxidação ou ligação irregular.
-Se a imagem não permitir leitura confiável, diga isso objetivamente e peça a foto exata que falta.
-Mesmo na primeira resposta, use a evidência visual para formular uma hipótese inicial técnica, mantendo a resposta curta.`;
+Antes de diagnosticar, extraia sinais concretos do anexo (áudio ou imagem): display/IHM, alarme, placa, modelo, tensão, borneira, painel, CLP, controlador, contatora, disjuntor-motor, pressostato, sensor, compressor, condensador, evaporador, gelo, sujeira, vazamento, oxidação, som mecânico/elétrico ou relato falado.
+Se o anexo não permitir leitura/escuta confiável, diga isso objetivamente.
+Mesmo na primeira resposta, use a evidência do anexo para formular uma hipótese inicial técnica precisa.${audioProtocol}`;
 };
 
 const getSymptomSpecificInstruction = (
@@ -402,7 +424,7 @@ const getSymptomSpecificInstruction = (
   return lines.length ? `\n\n${lines.join('\n')}` : "";
 };
 
-const getSupportConfig = (systemInstruction: string, modelName: string, isFirstReply: boolean) => {
+const getSupportConfig = (systemInstruction: string, modelName: string, isFirstReply: boolean, hasAudio = false) => {
   const baseConfig: Record<string, any> = {
     systemInstruction,
     temperature: 0.2,
@@ -410,7 +432,7 @@ const getSupportConfig = (systemInstruction: string, modelName: string, isFirstR
 
   if (modelName.startsWith("gemini-3")) {
     baseConfig.thinkingConfig = {
-      thinkingLevel: isFirstReply ? "low" : "medium",
+      thinkingLevel: (isFirstReply && !hasAudio) ? "low" : "medium",
     };
   }
 
@@ -638,13 +660,14 @@ export const generateChatResponseStream = async (
     // Economia de tokens: na 1a resposta (curta: hipotese + 2 perguntas + acao) NAO enviamos a base
     // extensa (FAQ ~7.8k + base 4 camadas ~3.2k). A persona, o contexto tecnico integrado, os brain packs
     // e a analise local deterministica continuam indo. A base completa entra na continuacao, onde e usada.
-    const includeExtendedKnowledge = !isFirstReply;
+    const hasAudioInCurrentTurn = hasAudioAttachmentInPrompt(latestUserText);
+    const includeExtendedKnowledge = !isFirstReply || hasAudioInCurrentTurn;
     const systemInstruction = await getFullSystemInstruction("DIAGNOSTIC", fullConversationText, mode, diagnosticContext, includeExtendedKnowledge, isFirstReply);
 
     const responseStream = await ai.models.generateContentStream({
       model: modelName,
       contents,
-      config: getSupportConfig(systemInstruction, modelName, isFirstReply)
+      config: getSupportConfig(systemInstruction, modelName, isFirstReply, hasAudioInCurrentTurn)
     });
 
     let fullText = "";
