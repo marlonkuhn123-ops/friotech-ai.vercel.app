@@ -15,7 +15,7 @@ export const SCHEMATICS_DATABASE = `
 8. Ao responder diagnóstico, informe qual família foi usada como base (ex: "família 20000L 4 compressores 220 V limpeza automática").
 9. CAPACIDADE EM FAIXA: quando a família declarar uma faixa (ex: "6000L a 15000L"), o MESMO esquema vale para todas as capacidades da faixa. O que define a família é a tensão e a quantidade de compressores/unidades, NÃO a litragem impressa no nome do arquivo. Nunca negue o esquema ao técnico só porque ele informou uma litragem diferente da que aparece no nome do arquivo: confirme tensão e quantidade de compressores e responda.
 10. O NOME DO ARQUIVO NÃO É CONFIÁVEL. Vale o que está escrito DENTRO do desenho (bloco de título da capa). Casos reais já confirmados nesta base:
-   - Todos os arquivos cujo nome diz "UNIDADE SEPARADA" trazem "2 UNIDADE REMOTA" no bloco de título. Em Ordemilk, "unidade separada" e "unidade remota" são o MESMO conceito escrito de formas diferentes. Não trate como famílias distintas nem peça ao técnico para diferenciar as duas palavras.
+   - Todos os arquivos cujo nome diz "UNIDADE SEPARADA" trazem "2 UNIDADE REMOTA" no bloco de título. Em FrioTech, "unidade separada" e "unidade remota" são o MESMO conceito escrito de formas diferentes. Não trate como famílias distintas nem peça ao técnico para diferenciar as duas palavras.
    - "QUADRO COMANDO 1 UNIDADE SEPARADA 3~220V AUTOMÁTICO" é, no desenho, 1~220 VCA MONOFÁSICO, e não trifásico como o nome sugere.
    - "PE - TANQUE 2 UNIDADE REMOTA LIMPEZA SEMI-AUTO - 3~220V" tem a capa errada (diz mono-bifásico), enquanto o nome e o subtítulo interno dizem trifásico 220 V.
    Quando houver contradição, diga isso ao técnico em vez de escolher em silêncio.
@@ -319,7 +319,7 @@ Arquivo: ESQUEM_2
 - observacao_tecnica: O nome do arquivo é genérico, mas o desenho é claro: "QUADRO DE COMANDO 3 COMPRESSORES - LIMPEZA AUTOMÁTICA COM RÉGUA ELETRÔNICA - PARA ROBÔ LELY, DELAVAL e GEA". É o lado CIP da família de 3 compressores (6.000L a 15.000L). Traz CLP, botoeira de emergência e relé de nível, e a tabela de comprimento de cabos por litragem do tanque.
 - confianca_da_classificacao: Alta (lido no desenho)
 
-[DETALHAMENTO TÉCNICO GERAL DOS ESQUEMAS ELÉTRICOS ORDEMILK]
+[DETALHAMENTO TÉCNICO GERAL DOS ESQUEMAS ELÉTRICOS FRIOTECH]
 REGRA GERAL DE EQUIPAMENTOS:
 - Tanques de 4.000 LITROS OU MAIS (4k, 6k, 10k, 20k, etc.): Utilizam obrigatoriamente CLP Panasonic FP-X0 L40MR.
   * Saída Agitador: Saída YE do CLP -> Aciona Relé de Borne RL6 (ou RL18 nos quadros novos).
@@ -356,7 +356,7 @@ REGRA GERAL DE EQUIPAMENTOS:
      * RA/NA: Saída Força Agitador.
 
 [ARQUITETURA MODULAR E DIFERENÇAS DE PROJETO]
-O "tanque de leite" Ordemilk é um sistema elétrico modular dividido em dois blocos funcionais:
+O "tanque de leite" FrioTech é um sistema elétrico modular dividido em dois blocos funcionais:
 
 1. BLOCO DE FORÇA E COMANDO (PAINEL GERAL):
    - Responsável por seccionamento, proteção e acionamento (Compressores, Agitadores, Bomba de Lavagem).

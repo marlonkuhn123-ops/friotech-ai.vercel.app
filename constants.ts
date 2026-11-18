@@ -26,7 +26,7 @@ export const EXTERNAL_MANUALS: Record<string, string> = {
     `
 };
 
-// --- CÉREBRO TÉCNICO ORDEMILK V64 (MODO HÍBRIDO: REFRIGERAÇÃO + ELÉTRICA) ---
+// --- CÉREBRO TÉCNICO FRIOTECH AI V64 (MODO HÍBRIDO: REFRIGERAÇÃO + ELÉTRICA) ---
 
 export const TECHNICAL_CONTEXT = `
 [PROTOCOLO DE DIAGNÓSTICO INTEGRADO]
@@ -43,7 +43,7 @@ ATENÇÃO: Um sintoma elétrico (desarme, travamento) é frequentemente a CONSEQ
 
 2. **ANÁLISE ELÉTRICA/ELETRÔNICA (O SINTOMA/CONTROLE):**
    - **CLP / Monitoramento:** O reset resolve temporariamente? Isso indica atuação de proteção (Pressostato Alta, Térmico, Monitor de Tensão).
-   - **Componentes Críticos Ordemilk:**
+   - **Componentes Críticos FrioTech:**
      * **Resistor 2K2:** Se a temperatura oscila no display, verifique este resistor na entrada do CLP.
      * **LED X9 (CLP):** Indica status da rede elétrica. Piscando = Rede instável impedindo partida.
 

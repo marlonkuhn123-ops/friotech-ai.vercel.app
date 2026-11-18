@@ -173,7 +173,7 @@ export const Tool_CourseSlides: React.FC = () => {
                             <div className="absolute inset-0 pointer-events-auto" onContextMenu={blockCopyAction} />
                             <div className="absolute inset-0 pointer-events-none opacity-[0.08] flex items-center justify-center -rotate-12">
                                 <span className="text-white text-2xl font-black tracking-[0.22em] whitespace-nowrap font-heading">
-                                    ORDEMILK TREINAMENTO
+                                    FRIOTECH TREINAMENTO
                                 </span>
                             </div>
                         </div>

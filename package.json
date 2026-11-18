@@ -1,7 +1,7 @@
 {
-  "name": "ordemilk-tech-assist",
+  "name": "friotech-agente-ai",
   "version": "1.0.0",
-  "description": "Assistente técnico especializado para resfriadores de leite Ordemilk.",
+  "description": "Assistente técnico especializado FrioTech / Agente AI para resfriadores de leite.",
   "main": "dist/index.js",
   "scripts": {
     "build": "node esbuild.config.js",
@@ -10,14 +10,14 @@
     "start": "npm run build && node inject-key.js && serve -s dist -l 3000"
   },
   "keywords": [
-    "Ordemilk",
+    "FrioTech",
     "Tech Assist",
     "Gemini",
     "AI",
     "React",
     "TypeScript"
   ],
-  "author": "Ordemilk Engineering",
+  "author": "FrioTech AI Platform",
   "license": "ISC",
   "dependencies": {
     "@google/genai": "^1.40.0",

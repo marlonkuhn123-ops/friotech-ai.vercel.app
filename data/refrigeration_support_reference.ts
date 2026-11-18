@@ -102,7 +102,7 @@ export const getTypicalPressureWindow = (
 
 export const REFRIGERATION_SUPPORT_REFERENCE_CONTEXT = `
 
-[REFERÊNCIA FRIGORÍFICA ESTRUTURADA - TANQUES ORDEMILK]
+[REFERÊNCIA FRIGORÍFICA ESTRUTURADA - TANQUES FRIOTECH]
 EVIDÊNCIA: LIMITE OFICIAL gera alerta firme somente com modelo/ponto/condição compatíveis; FAIXA TÍPICA pede confirmação e nunca condena componente; HIPÓTESE DIAGNÓSTICA sempre exige próximo teste.
 LIMITES: Maneurop MT/MTZ = 12 partidas/h (6 com soft-starter), descarga máxima 130°C e desequilíbrio entre fases máximo 2%. R-404A e R-407C são carregados em fase líquida; usar dew no Sup.Aque e bubble no Sub.Res. O R-407C tem glide grande (cerca de 6 K), então usar a curva errada erra a conta em vários kelvin. Óleo: MT mineral 160P; MTZ poliéster 175PZ, sempre confirmando placa/modelo.
 TRIAGEM: sob carga estabilizada, evaporação -7°C a -5°C e condensação aproximadamente 10K a 15K acima do ar de entrada são referências, não projeto. Sup.Aque 7K a 12K é na saída do evaporador/bulbo; na entrada do compressor é outra medição. Taxa de compressão 3,2 a 5,5 é apenas triagem com pressões absolutas.

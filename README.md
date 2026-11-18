@@ -1,6 +1,6 @@
-# Ordemilk Tech Assist
+# FrioTech / Agente AI ❄
 
-App tecnico mobile-first da Ordemilk para suporte de campo, calculos, dimensionamento, relatorios e consulta de dados tecnicos.
+App técnico mobile-first da FrioTech AI para suporte de campo, cálculos, dimensionamento, relatórios e consulta de dados técnicos.
 
 ## Fonte da verdade
 

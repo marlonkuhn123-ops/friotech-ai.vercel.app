@@ -8,7 +8,7 @@ interface TechData {
     company: string;
 }
 
-const STORAGE_KEY = 'ordemilk_tech_data';
+const STORAGE_KEY = 'friotech_tech_data';
 const EMPTY_TECH_DATA: TechData = { name: '', company: '' };
 const hasStorage = () => typeof window !== 'undefined' && typeof window.localStorage !== 'undefined';
 

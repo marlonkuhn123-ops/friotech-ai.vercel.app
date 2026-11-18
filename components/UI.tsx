@@ -204,7 +204,7 @@ export const Watermark: React.FC<{ text: string }> = ({ text }) => {
                             {text} • {new Date().toLocaleDateString('pt-BR')}
                         </span>
                         <span className="text-white font-bold text-[8px] whitespace-nowrap uppercase tracking-[0.8em] mt-1">
-                            ORDEMILK TECH • PROPRIEDADE PRIVADA
+                            FRIOTECH AI • PROPRIEDADE PRIVADA
                         </span>
                     </div>
                 ))}

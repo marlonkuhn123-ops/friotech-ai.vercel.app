@@ -1,7 +1,7 @@
 
 export const KNOWLEDGE_BASE = `
 [CAMADA 1: FUNCIONAMENTO - LÓGICA E COMPONENTES]
-Esta camada explica como o sistema Ordemilk deve operar e a função de cada componente.
+Esta camada explica como o sistema FrioTech deve operar e a função de cada componente.
 
 1. ARQUITETURA MODULAR:
    - PAINEL GERAL: Camada de potência e proteção. Cuida de motores (Compressores, Agitadores, Bomba) e intertravamentos elétricos.

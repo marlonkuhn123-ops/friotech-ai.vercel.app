@@ -1,6 +1,6 @@
 
 export const FAQ_DATABASE = `
-[PACOTE DE CONHECIMENTO TÉCNICO: REFERÊNCIA ORDEMILK]
+[PACOTE DE CONHECIMENTO TÉCNICO: REFERÊNCIA FRIOTECH]
 Este guia contém 50 cenários reais de campo e seus respectivos diagnósticos técnicos. Use estas informações como base de conhecimento para enriquecer suas análises, mantendo a liberdade de diagnosticar variações conforme o contexto apresentado pelo técnico.
 
 MÓDULO 1: ELÉTRICA RURAL E PAINEL DE COMANDO

@@ -17,7 +17,7 @@ import { normalizeSupportFieldTerminology } from "./localSupportService";
 const DEFAULT_TEXT_MODEL = ENV.GEMINI_TEXT_MODEL;
 const SUPPORT_PRIMARY_MODEL = ENV.GEMINI_SUPPORT_MODEL;
 const SUPPORT_FALLBACK_MODEL = ENV.GEMINI_SUPPORT_FALLBACK_MODEL;
-const ATTACHMENT_ANALYSIS_MARKER = "[ANEXO_TÉCNICO_ORDEMILK]";
+const ATTACHMENT_ANALYSIS_MARKER = "[ANEXO_TÉCNICO_FRIOTECH]";
 const EMPTY_RESPONSE_ERROR = "EMPTY_SUPPORT_RESPONSE";
 
 const SUPPORT_FIELD_BRAIN_PACK = `
@@ -48,7 +48,7 @@ const SUPPORT_ELECTRICAL_FIELD_BRAIN_PACK = `
 `;
 
 const SUPPORT_REFRIGERATION_SYSTEM_PROMPT_BASE = `
-VOCÊ É UM ENGENHEIRO ESPECIALISTA EM REFRIGERAÇÃO INDUSTRIAL ORDEMILK PARA RESFRIADORES DE LEITE.
+VOCÊ É UM ENGENHEIRO ESPECIALISTA EM REFRIGERAÇÃO INDUSTRIAL DA FRIOTECH AI PARA RESFRIADORES DE LEITE.
 
 SUA MISSÃO NO MODO REF:
 Diagnosticar falhas do ciclo frigorífico de tanques de leite com ligação real ao técnico de campo.
@@ -100,7 +100,7 @@ const handleApiError = (error: any) => {
 
   // Creditos da API esgotados (faturamento) — diferente de limite de uso momentaneo
   if (lower.includes('prepayment credits are depleted') || lower.includes('billing') || lower.includes('credits')) {
-    return "💳 IA TEMPORARIAMENTE INDISPONÍVEL: créditos da API esgotados. Avise a engenharia Ordemilk. Posso responder pelo modo de consulta local enquanto isso.";
+    return "💳 IA TEMPORARIAMENTE INDISPONÍVEL: créditos da API esgotados. Avise o suporte FrioTech AI. Posso responder pelo modo de consulta local enquanto isso.";
   }
 
   // Limite de uso momentaneo / cota
@@ -504,7 +504,7 @@ const getFullSystemInstruction = async (
     : "";
 
   const faqContext = includeExtendedKnowledge
-    ? `\n\n[PACOTE DE CONHECIMENTO DE REFERÊNCIA]\nO conteúdo abaixo são casos frequentes e diagnósticos recomendados pela Ordemilk. Use-os como base de conhecimento e inspiração para suas análises, mas sinta-se livre para adaptar o diagnóstico conforme a situação específica relatada pelo técnico. Não trate como regras rígidas, mas como um guia de experiência acumulada.\n${faqDatabase}`
+    ? `\n\n[PACOTE DE CONHECIMENTO DE REFERÊNCIA]\nO conteúdo abaixo são casos frequentes e diagnósticos recomendados pela engenharia FrioTech. Use-os como base de conhecimento e inspiração para suas análises, mas sinta-se livre para adaptar o diagnóstico conforme a situação específica relatada pelo técnico. Não trate como regras rígidas, mas como um guia de experiência acumulada.\n${faqDatabase}`
     : "";
 
   const structuredKnowledge = includeExtendedKnowledge

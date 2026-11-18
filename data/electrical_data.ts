@@ -1,6 +1,6 @@
 
 export const ELECTRICAL_DATABASE = `
-[BANCO DE DADOS DE ESQUEMAS ELÉTRICOS ORDEMILK]
+[BANCO DE DADOS DE ESQUEMAS ELÉTRICOS FRIOTECH]
 
 1. TANQUE TL.UF (UNIDADE FIXA - MODO AUTOMÁTICO):
    - Tensão: 1~220 VCA.
@@ -42,7 +42,7 @@ export const ELECTRICAL_DATABASE = `
    - Proteção: Relé de Falta de Fase (RFF) e DPS (Dispositivos de Surto).
    - Cabos: Entrada 70mm HEPR. Distribuição interna 10mm. Comando 1mm.
 
-5. TANQUE AGRANEL MONOFÁSICA (OM 02 - 220V):
+5. TANQUE AGRANEL MONOFÁSICA (Mod. 02 - 220V):
    - Controlador: Ageon MT-516CVT.
    - Régua de Bornes (X1):
      * 1 (R): Sinal Pressostato.
@@ -60,7 +60,7 @@ export const ELECTRICAL_DATABASE = `
 - d2 (Agitador Ligado): 2 min.
 - u1/u2 (Proteção Tensão): 200V a 240V.
 
-[DIRETRIZES DE DIAGNÓSTICO DE COMPONENTES ESPECÍFICOS ORDEMILK]
+[DIRETRIZES DE DIAGNÓSTICO DE COMPONENTES ESPECÍFICOS FRIOTECH]
 ATENÇÃO: Siga estas regras estritamente ao diagnosticar os componentes abaixo:
 
 - AGITADOR: O diagnóstico do agitador é PURAMENTE ELÉTRICO E DE COMANDO. NUNCA sugira verificações mecânicas (como "girar as pás manualmente"). Se o agitador não liga, foque em:
@@ -69,5 +69,5 @@ ATENÇÃO: Siga estas regras estritamente ao diagnosticar os componentes abaixo:
   3. Contatora do agitador (bobina ou contatos).
   4. Integridade do motor elétrico (medir resistência/tensão).
 
-- BOMBA DE LIMPEZA (CIP): Se a bomba de limpeza não liga ou não aciona, a causa MAIS PROVÁVEL no sistema Ordemilk é o RELÉ DE NÍVEL (RL1) que não detectou água/solução suficiente, ou falha no próprio sensor de nível. Foque o diagnóstico no circuito do relé de nível antes de condenar a bomba.
+- BOMBA DE LIMPEZA (CIP): Se a bomba de limpeza não liga ou não aciona, a causa MAIS PROVÁVEL no sistema FrioTech é o RELÉ DE NÍVEL (RL1) que não detectou água/solução suficiente, ou falha no próprio sensor de nível. Foque o diagnóstico no circuito do relé de nível antes de condenar a bomba.
 `;

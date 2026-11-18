@@ -140,13 +140,14 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, installPrompt
                             <i className="fa-solid fa-shield-halved text-3xl text-[#E8EAF6]/60"></i>
                         </div>
                     </div>
-                    <div className="bg-white px-4 py-2 rounded-lg mb-4 shadow-lg">
-                        <span className="font-inter font-black italic text-2xl tracking-tighter text-black">ORDEMILK</span>
+                    <div className="bg-[#1e293b] border border-[#00d9ff]/40 px-5 py-2.5 rounded-xl mb-4 shadow-[0_0_25px_rgba(0,217,255,0.25)] flex items-center justify-center gap-2">
+                        <span className="font-inter font-black tracking-tight text-2xl text-white">Frio<span className="text-[#00d9ff]">Tech</span></span>
+                        <span className="text-xl">❄</span>
                     </div>
 
                     <div className="flex flex-col items-center">
                         <h1 className="flex items-baseline gap-2 mb-1">
-                            <span className="font-inter font-black tracking-wider text-xl leading-none text-[#00d9ff]">AGENTE AI <span className="text-white/60 text-sm">V86</span></span>
+                            <span className="font-inter font-black tracking-wider text-xl leading-none text-[#00d9ff]">AGENTE AI <span className="text-white/60 text-sm">V87</span></span>
                         </h1>
                         <p className="mt-2 text-[10px] font-bold uppercase tracking-[0.3em] text-[#E8EAF6]/60">{'Terminal T\u00e9cnico Privado'}</p>
                     </div>

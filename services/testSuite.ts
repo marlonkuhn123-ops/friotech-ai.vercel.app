@@ -129,7 +129,7 @@ export const runSystemDiagnostics = () => {
     // --- TESTES DE DIMENSIONAMENTO (CRÍTICO) ---
     test("Dimensionamento: Cálculo de carga para 1000L", () => {
         const result = logicService.calculateCargaTermica(1000);
-        // Valor esperado aproximado baseado na fórmula da Ordemilk
+        // Valor esperado aproximado baseado na fórmula térmica padrão
         assert(result.kcal > 7000 && result.kcal < 8500, `Carga térmica fora do esperado: ${result.kcal} kcal`);
     });
 

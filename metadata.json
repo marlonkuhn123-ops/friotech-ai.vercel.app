@@ -1,6 +1,6 @@
 {
-  "name": "Remix: Ordemilk Tech Assist",
-  "description": "Assistente técnico especializado para resfriadores de leite Ordemilk, com diagnóstico IA e ferramentas de cálculo.",
+  "name": "FrioTech / Agente AI ❄",
+  "description": "Assistente técnico especializado FrioTech / Agente AI para resfriadores de leite, com diagnóstico IA e ferramentas de cálculo.",
   "requestFramePermissions": [
     "camera"
   ]
