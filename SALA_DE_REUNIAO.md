@@ -10,16 +10,21 @@
 | Campo | Valor |
 |-------|-------|
 | **Data** | 2026-11-18 |
-| **Versao em producao** | **V90** (publicada em 2026-11-18) |
-| **Commit publicado** | V90 (icones PNG reais 192x192 e 512x512 FRIOAI para instalacao PWA no Windows/Android/iOS, selos V90) |
+| **Versao em producao** | **V91** (publicada em 2026-11-18) |
+| **Commit publicado** | V91 (icone PWA ❄AI com floco de neve cristalino e AI em azul sobre fundo preto, selos V91) |
 | **Endereco** | https://friotech-ai.vercel.app (exclusivo; dominios antigos bloqueados) |
 | **Repositorio / branch** | `marlonkuhn123-ops/friotech-ai.vercel.app` / `main` |
-| **Autoteste interno** | **59/59** na V90 (59 na V89) (botao de status dentro do app) |
-| **Verificacao em producao** | V90: icones PNG reais FRIOAI (fundo preto, letras azuis), 4 selos V90 unificados |
+| **Autoteste interno** | **59/59** na V91 (59 na V90) (botao de status dentro do app) |
+| **Verificacao em producao** | V91: icones PNG reais ❄AI (fundo preto, simbolo ❄AI em azul), 4 selos V91 unificados |
 | **Pendencias abertas** | Nenhuma pendência crítica |
 | **Pode editar o app agora?** | Somente com autorizacao explicita do USER |
 
-**Ultima atualizacao (o que mudou na V90) - ICONES PNG REAIS (192x192 E 512x512) FRIOAI PARA ATALHO PWA:**
+**Ultima atualizacao (o que mudou na V91) - ICONE PWA ❄AI (SOMENTE SIMBOLO ❄AI EM AZUL SOBRE FUNDO PRETO):**
+1. Refeitos os icones `public/icon-192.png`, `public/icon-512.png` e `public/icon.svg` retirando `FRIOAI` e deixando exclusivamente o simbolo **`❄AI`** (floco de neve geometrico + `AI` em gradiente azul gelo com brilho suave sobre fundo preto profundo).
+2. Atualizados `public/manifest.json` (`short_name: "❄AI"`, `?v=91`) e `index.html` (`?v=91`).
+3. Alinhados os 4 selos obrigatorios em **V91**: `components/Estrutura.tsx` (`V91.0`), `public/sw.js` (`friotech-ai-v91`), `components/LoginScreen.tsx` (`V91`) e `components/TutorialOverlay.tsx` (`V91` x2).
+
+**Mudanca anterior (o que mudou na V90) - ICONES PNG REAIS (192x192 E 512x512) FRIOAI PARA ATALHO PWA:**
 1. Gerados arquivos PNG reais `public/icon-192.png` e `public/icon-512.png` (fundo preto `#000000`, moldura e letras `FRIOAI` em azul `#00D9FF`), pois o Chrome no Windows/Android exige PNG no `manifest.json` para não gerar o ícone cinza padrão com a letra "F".
 2. Atualizados `public/manifest.json` e `index.html` apontando para os PNGs com cache-busting `?v=90`.
 3. Alinhados os 4 selos obrigatorios em **V90**: `components/Estrutura.tsx` (`V90.0`), `public/sw.js` (`friotech-ai-v90`), `components/LoginScreen.tsx` (`V90`) e `components/TutorialOverlay.tsx` (`V90` x2).
