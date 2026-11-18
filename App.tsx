@@ -228,11 +228,34 @@ const AppContent: React.FC = () => {
 };
 
 const App: React.FC = () => {
-    const hostname = typeof window !== 'undefined' ? window.location.hostname : '';
+    const hostname = typeof window !== 'undefined' ? window.location.hostname.toLowerCase() : '';
+    const isLegacyBlockedDomain = hostname.includes('ordemilk');
     const isLocalHost = hostname === '127.0.0.1' || hostname === '0.0.0.0' || hostname.includes('localhost');
     const isProductionEnv = Boolean(hostname) &&
         !isLocalHost &&
         !hostname.includes('run.app');
+
+    if (isLegacyBlockedDomain) {
+        try {
+            localStorage.clear();
+            sessionStorage.clear();
+        } catch (e) {
+            // ignore storage errors
+        }
+        return (
+            <div className="h-full w-full flex flex-col items-center justify-center p-6 bg-[#0a0e14] text-center select-none">
+                <div className="bg-[#111827] border border-red-500/30 rounded-2xl p-8 max-w-sm w-full shadow-2xl">
+                    <div className="w-14 h-14 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i className="fa-solid fa-ban text-red-500 text-2xl"></i>
+                    </div>
+                    <h1 className="text-white font-bold text-base uppercase tracking-widest mb-2">Endereço Desativado</h1>
+                    <p className="text-xs text-gray-400 leading-relaxed">
+                        Este link antigo foi encerrado e não possui mais acesso ao sistema.
+                    </p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <GlobalProvider>

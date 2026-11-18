@@ -10,16 +10,21 @@
 | Campo | Valor |
 |-------|-------|
 | **Data** | 2026-11-18 |
-| **Versao em producao** | **V88** (publicada em 2026-11-18) |
-| **Commit publicado** | V88 (icone PWA FRIOAI em fundo preto e letras azuis, selos V88) |
-| **Endereco** | https://friotech-ai.vercel.app (e https://ordemilk.vercel.app) |
-| **Repositorio / branch** | `marlonkuhn123-ops/friotech-ai.vercel.app` (`marlon-ordemilk-app`) / `main` |
-| **Autoteste interno** | **59/59** na V88 (59 na V87) (botao de status dentro do app) |
-| **Verificacao em producao** | V88: icone PWA FRIOAI fundo preto letras azuis, marca 100% FrioTech / Agente AI ❄, 4 selos V88 unificados |
+| **Versao em producao** | **V89** (publicada em 2026-11-18) |
+| **Commit publicado** | V89 (bloqueio definitivo de dominios antigos *ordemilk*, acesso exclusivo via friotech-ai.vercel.app) |
+| **Endereco** | https://friotech-ai.vercel.app (exclusivo; dominios antigos bloqueados) |
+| **Repositorio / branch** | `marlonkuhn123-ops/friotech-ai.vercel.app` / `main` |
+| **Autoteste interno** | **59/59** na V89 (59 na V88) (botao de status dentro do app) |
+| **Verificacao em producao** | V89: bloqueio ativo para dominios *ordemilk*, funcionando exclusivamente em https://friotech-ai.vercel.app, 4 selos V89 unificados |
 | **Pendencias abertas** | Nenhuma pendência crítica |
 | **Pode editar o app agora?** | Somente com autorizacao explicita do USER |
 
-**Ultima atualizacao (o que mudou na V88) - ICONE PWA FRIOAI (FUNDO PRETO, LETRAS EM AZUL) E SELOS V88:**
+**Ultima atualizacao (o que mudou na V89) - BLOQUEIO DE DOMINIOS ANTIGOS E ACESSO EXCLUSIVO VIA FRIOTECH-AI.VERCEL.APP:**
+1. Removido o dominio antigo `app-ordemilk.vercel.app` na Vercel e adicionado bloqueio em `App.tsx` para qualquer hostname contendo `ordemilk` (`ordemilk.vercel.app`), limpando sessao e exibindo tela de "Endereco Desativado" sem revelar o novo link.
+2. Acesso permitido exclusivamente pelo novo endereco oficial `https://friotech-ai.vercel.app`.
+3. Alinhados os 4 selos obrigatorios em **V89**: `components/Estrutura.tsx` (`V89.0`), `public/sw.js` (`friotech-ai-v89`), `components/LoginScreen.tsx` (`V89`) e `components/TutorialOverlay.tsx` (`V89` x2).
+
+**Mudanca anterior (o que mudou na V88) - ICONE PWA FRIOAI (FUNDO PRETO, LETRAS EM AZUL) E SELOS V88:**
 1. Atualizado `public/icon.svg` para exibir `FRIOAI` em letras azuis (`#00D9FF`) sobre fundo preto (`#000000`), conforme solicitado pelo USER.
 2. Atualizado `public/manifest.json` (`short_name: "FRIOAI"`, cache-busting `/icon.svg?v=88`) e adicionado `<link rel="icon">` / `<link rel="apple-touch-icon">` em `index.html`.
 3. Alinhados os 4 selos obrigatorios em **V88**: `components/Estrutura.tsx` (`V88.0`), `public/sw.js` (`friotech-ai-v88`), `components/LoginScreen.tsx` (`V88`) e `components/TutorialOverlay.tsx` (`V88` x2).
