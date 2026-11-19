@@ -1,4 +1,4 @@
-const CACHE_NAME = 'friotech-ai-v94';
+const CACHE_NAME = 'friotech-ai-v95';
 const ASSETS = [
     '/',
     '/index.html',

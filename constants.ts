@@ -3,7 +3,7 @@ import { Refrigerant } from './types';
 
 // --- BIBLIOTECA SILENCIOSA (MANUAIS DE TERCEIROS) ---
 export const EXTERNAL_MANUALS: Record<string, string> = {
-    'REAFRIO': `
+   'REAFRIO': `
     [CONTEXTO TÉCNICO: REAFRIO]
     - O resfriador Reafrio geralmente utiliza controladores da marca EVERY CONTROL ou FULL GAUGE (modelos antigos).
     - ERROS COMUNS REAFRIO:
@@ -12,20 +12,21 @@ export const EXTERNAL_MANUALS: Record<string, string> = {
     - LÓGICA DE GÁS: Trabalham com expansão por capilar em modelos até 2000L.
     `,
 
-    'DELAVAL': `
+   'DELAVAL': `
     [CONTEXTO TÉCNICO: DELAVAL]
     - Equipamentos costumam ter proteção de tensão muito sensível (Monitor de Fase).
     - Lavagem: O sistema de lavagem (T100/T200) exige pressão de água mínima de 2 bar.
     - Erros de limpeza são bloqueantes: Se a limpeza falhar, ele não deixa gelar.
     `,
 
-    'WESTFALIA': `
+   'WESTFALIA': `
     [CONTEXTO TÉCNICO: GEA / WESTFALIA]
     - Utilizam muito o controlador J-STAR.
     - Atenção ao termostato de segurança (Termostato mecânico de bulbo) que fica em série com a contactora. Se ele abrir, o painel liga mas o compressor não parte.
     `
 };
 
+// --- CÉREBRO TÉCNICO ORDEMILK V64 (MODO HÍBRIDO: REFRIGERAÇÃO + ELÉTRICA) ---
 // --- CÉREBRO TÉCNICO FRIOTECH AI V64 (MODO HÍBRIDO: REFRIGERAÇÃO + ELÉTRICA) ---
 
 export const TECHNICAL_CONTEXT = `
@@ -43,6 +44,7 @@ ATENÇÃO: Um sintoma elétrico (desarme, travamento) é frequentemente a CONSEQ
 
 2. **ANÁLISE ELÉTRICA/ELETRÔNICA (O SINTOMA/CONTROLE):**
    - **CLP / Monitoramento:** O reset resolve temporariamente? Isso indica atuação de proteção (Pressostato Alta, Térmico, Monitor de Tensão).
+   - **Componentes Críticos Ordemilk:**
    - **Componentes Críticos FrioTech:**
      * **Resistor 2K2:** Se a temperatura oscila no display, verifique este resistor na entrada do CLP.
      * **LED X9 (CLP):** Indica status da rede elétrica. Piscando = Rede instável impedindo partida.
@@ -144,7 +146,7 @@ Você deve separar claramente o que é MECÂNICO/FRIGORÍFICO do que é ELÉTRIC
 `;
 
 export const TOOL_PROMPTS = {
-    DIAGNOSTIC: `MODO: ENGENHARIA DE CAMPO.
+   DIAGNOSTIC: `MODO: ENGENHARIA DE CAMPO.
 
 FORMATO OBRIGATÓRIO DA PRIMEIRA RESPOSTA:
 1. **Hipótese Principal:** 1 frase direta.
@@ -156,9 +158,9 @@ REGRAS:
 - Só aprofunde o diagnóstico quando o técnico responder, pedir detalhes ou enviar novas medições.
 - Mantenha toda a inteligência técnica — apenas entregue em etapas.
 - Priorize objetividade de campo.`,
-    ERRORS: "MODO: CONSULTA TÉCNICA. Explique o código de erro, sua origem (sensor/lógica) e a ação corretiva.",
-    CALC: "MODO: TERMODINÂMICA. Analise o Superaquecimento/Sub-resfriamento. Se fora da faixa, indique risco ao compressor (golpe ou superaquecimento).",
-    SIZING: "MODO: PROJETO. Calcule carga térmica e selecione compressor baseando-se em normas técnicas (ISO/Danfoss).",
-    REPORT: "MODO: DOCUMENTAÇÃO. Gere laudo técnico formal e jurídico.",
-    ELECTRIC: "MODO: ELÉTRICA. Analise desbalanceamento, queda de tensão e fator de potência."
+   ERRORS: "MODO: CONSULTA TÉCNICA. Explique o código de erro, sua origem (sensor/lógica) e a ação corretiva.",
+   CALC: "MODO: TERMODINÂMICA. Analise o Superaquecimento/Sub-resfriamento. Se fora da faixa, indique risco ao compressor (golpe ou superaquecimento).",
+   SIZING: "MODO: PROJETO. Calcule carga térmica e selecione compressor baseando-se em normas técnicas (ISO/Danfoss).",
+   REPORT: "MODO: DOCUMENTAÇÃO. Gere laudo técnico formal e jurídico.",
+   ELECTRIC: "MODO: ELÉTRICA. Analise desbalanceamento, queda de tensão e fator de potência."
 };

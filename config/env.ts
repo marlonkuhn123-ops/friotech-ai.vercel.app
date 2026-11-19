@@ -19,27 +19,27 @@ export const ENV = {
     get GEMINI_TEXT_MODEL(): string {
         try {
             // @ts-ignore
-            return process.env.GEMINI_TEXT_MODEL || "gemini-3.8-flash";
+            return process.env.GEMINI_TEXT_MODEL || "gemini-4-argon";
         } catch (e) {
-            return "gemini-3.8-flash";
+            return "gemini-4-argon";
         }
     },
 
     get GEMINI_SUPPORT_MODEL(): string {
         try {
             // @ts-ignore
-            return process.env.GEMINI_SUPPORT_MODEL || "gemini-3.1-pro-preview";
+            return process.env.GEMINI_SUPPORT_MODEL || "gemini-4-argon";
         } catch (e) {
-            return "gemini-3.1-pro-preview";
+            return "gemini-4-argon";
         }
     },
 
     get GEMINI_SUPPORT_FALLBACK_MODEL(): string {
         try {
             // @ts-ignore
-            return process.env.GEMINI_SUPPORT_FALLBACK_MODEL || ENV.GEMINI_TEXT_MODEL;
+            return process.env.GEMINI_SUPPORT_FALLBACK_MODEL || "gemini-3.1-pro-preview";
         } catch (e) {
-            return ENV.GEMINI_TEXT_MODEL;
+            return "gemini-3.1-pro-preview";
         }
     }
 };

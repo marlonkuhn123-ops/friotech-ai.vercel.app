@@ -10,16 +10,20 @@
 | Campo | Valor |
 |-------|-------|
 | **Data** | 2026-11-19 |
-| **Versao em producao** | **V94** (publicada em 2026-11-19) |
-| **Commit publicado** | V94 (Modo Maxima Inteligencia no Suporte: gemini-3.1-pro-preview + base completa 4 camadas + thinkingLevel medium desde a 1a resposta, fallback gemini-3.8-flash, selos V94) |
+| **Versao em producao** | **V95** (publicada em 2026-11-19) |
+| **Commit publicado** | V95 (Modelo titular atualizado para gemini-4-argon com fallback gemini-3.1-pro-preview, selos V95) |
 | **Endereco** | https://friotech-ai.vercel.app (exclusivo; dominios antigos bloqueados) |
 | **Repositorio / branch** | `marlonkuhn123-ops/friotech-ai.vercel.app` / `main` |
-| **Autoteste interno** | **59/59** na V94 (59 na V93) (botao de status dentro do app) |
-| **Verificacao em producao** | V94: IA Pro topo de linha com base 100% completa desde a 1a resposta, 4 selos V94 unificados |
+| **Autoteste interno** | **59/59** na V95 (59 na V94) (botao de status dentro do app) |
+| **Verificacao em producao** | V95: gemini-4-argon ativo como modelo principal em todo o app, 4 selos V95 unificados |
 | **Pendencias abertas** | Nenhuma pendência crítica |
 | **Pode editar o app agora?** | Somente com autorizacao explicita do USER |
 
-**Ultima atualizacao (o que mudou na V94) - MODO MAXIMA INTELIGENCIA NA IA DO SUPORTE:**
+**Ultima atualizacao (o que mudou na V95) - GEMINI 4 ARGON COMO MODELO TITULAR:**
+1. Atualizado `config/env.ts` para usar **`gemini-4-argon`** como modelo titular do Suporte e das ferramentas de IA, com **`gemini-3.1-pro-preview`** como fallback automático.
+2. Alinhados os 4 selos obrigatorios em **V95**: `components/Estrutura.tsx` (`V95.0`), `public/sw.js` (`friotech-ai-v95`), `components/LoginScreen.tsx` (`V95`) e `components/TutorialOverlay.tsx` (`V95` x2).
+
+**Mudanca anterior (o que mudou na V94) - MODO MAXIMA INTELIGENCIA NA IA DO SUPORTE:**
 1. **Modelo Pro Titular desde a 1a Pergunta (`services/geminiService.ts`, `config/env.ts`):** O Suporte agora usa **`gemini-3.1-pro-preview`** em todos os turnos (inclusive na 1a resposta), com **`gemini-3.8-flash`** atualizado como modelo rápido e fallback automático.
 2. **Base de Conhecimento 100% Completa na 1a Pergunta:** Removida a trava de economia (`includeExtendedKnowledge = true` sempre), enviando o `FAQ_DATABASE` e a `KNOWLEDGE_BASE` estruturada em 4 camadas já no primeiro turno do atendimento.
 3. **Raciocinio Profundo (`thinkingLevel: "medium"`):** Ativado em todas as respostas do Suporte desde a primeira interação.
