@@ -19,9 +19,9 @@ export const ENV = {
     get GEMINI_TEXT_MODEL(): string {
         try {
             // @ts-ignore
-            return process.env.GEMINI_TEXT_MODEL || "gemini-3-flash-preview";
+            return process.env.GEMINI_TEXT_MODEL || "gemini-3.8-flash";
         } catch (e) {
-            return "gemini-3-flash-preview";
+            return "gemini-3.8-flash";
         }
     },
 

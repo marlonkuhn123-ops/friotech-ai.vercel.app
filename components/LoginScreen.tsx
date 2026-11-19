@@ -147,7 +147,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, installPrompt
 
                     <div className="flex flex-col items-center">
                         <h1 className="flex items-baseline gap-2 mb-1">
-                            <span className="font-inter font-black tracking-wider text-xl leading-none text-[#00d9ff]">AGENTE AI <span className="text-white/60 text-sm">V93</span></span>
+                            <span className="font-inter font-black tracking-wider text-xl leading-none text-[#00d9ff]">AGENTE AI <span className="text-white/60 text-sm">V94</span></span>
                         </h1>
                         <p className="mt-2 text-[10px] font-bold uppercase tracking-[0.3em] text-[#E8EAF6]/60">{'Terminal T\u00e9cnico Privado'}</p>
                     </div>

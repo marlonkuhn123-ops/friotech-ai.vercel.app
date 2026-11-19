@@ -424,15 +424,15 @@ const getSymptomSpecificInstruction = (
   return lines.length ? `\n\n${lines.join('\n')}` : "";
 };
 
-const getSupportConfig = (systemInstruction: string, modelName: string, isFirstReply: boolean, hasAudio = false) => {
+const getSupportConfig = (systemInstruction: string, modelName: string, _isFirstReply: boolean, _hasAudio = false) => {
   const baseConfig: Record<string, any> = {
     systemInstruction,
     temperature: 0.2,
   };
 
-  if (modelName.startsWith("gemini-3")) {
+  if (modelName.startsWith("gemini-3") || modelName.startsWith("gemini-4")) {
     baseConfig.thinkingConfig = {
-      thinkingLevel: (isFirstReply && !hasAudio) ? "low" : "medium",
+      thinkingLevel: "medium",
     };
   }
 
@@ -642,10 +642,10 @@ export const generateChatResponseStream = async (
     enforceFirstReplyContract(text, isFirstReply),
     requiredOpening
   );
-  // 1a resposta no modelo rapido (3 Flash) para dar retorno imediato ao tecnico em campo;
-  // continuacao no modelo profundo (3.1 Pro). Fallback usa sempre o outro dos dois.
-  const primaryModel = isFirstReply ? DEFAULT_TEXT_MODEL : SUPPORT_PRIMARY_MODEL;
-  const fallbackModel = isFirstReply ? SUPPORT_PRIMARY_MODEL : SUPPORT_FALLBACK_MODEL;
+  // Modo Maxima Inteligencia (V94): usa o modelo Pro topo de linha (SUPPORT_PRIMARY_MODEL)
+  // desde a 1a resposta, com fallback automatico para SUPPORT_FALLBACK_MODEL (gemini-3.8-flash).
+  const primaryModel = SUPPORT_PRIMARY_MODEL;
+  const fallbackModel = SUPPORT_FALLBACK_MODEL;
 
   const runStream = async (modelName: string): Promise<string> => {
     const apiKey = ENV.GEMINI_API_KEY;
@@ -657,11 +657,9 @@ export const generateChatResponseStream = async (
       .map(h => h.parts.map(p => p.text).filter(Boolean).join(' '))
       .join(' ');
 
-    // Economia de tokens: na 1a resposta (curta: hipotese + 2 perguntas + acao) NAO enviamos a base
-    // extensa (FAQ ~7.8k + base 4 camadas ~3.2k). A persona, o contexto tecnico integrado, os brain packs
-    // e a analise local deterministica continuam indo. A base completa entra na continuacao, onde e usada.
+    // Base completa (FAQ + 4 camadas + esquemas) ativa desde a 1a resposta para máxima precisão técnica
     const hasAudioInCurrentTurn = hasAudioAttachmentInPrompt(latestUserText);
-    const includeExtendedKnowledge = !isFirstReply || hasAudioInCurrentTurn;
+    const includeExtendedKnowledge = true;
     const systemInstruction = await getFullSystemInstruction("DIAGNOSTIC", fullConversationText, mode, diagnosticContext, includeExtendedKnowledge, isFirstReply);
 
     const responseStream = await ai.models.generateContentStream({

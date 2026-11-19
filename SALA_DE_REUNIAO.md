@@ -10,16 +10,22 @@
 | Campo | Valor |
 |-------|-------|
 | **Data** | 2026-11-19 |
-| **Versao em producao** | **V93** (publicada em 2026-11-19) |
-| **Commit publicado** | V93 (envio de audio em 1 toque estilo WhatsApp no suporte + diagnostico cruzado Sup.Aque/Sub.Res na calculadora com botao para levar ao suporte, selos V93) |
+| **Versao em producao** | **V94** (publicada em 2026-11-19) |
+| **Commit publicado** | V94 (Modo Maxima Inteligencia no Suporte: gemini-3.1-pro-preview + base completa 4 camadas + thinkingLevel medium desde a 1a resposta, fallback gemini-3.8-flash, selos V94) |
 | **Endereco** | https://friotech-ai.vercel.app (exclusivo; dominios antigos bloqueados) |
 | **Repositorio / branch** | `marlonkuhn123-ops/friotech-ai.vercel.app` / `main` |
-| **Autoteste interno** | **59/59** na V93 (59 na V92) (botao de status dentro do app) |
-| **Verificacao em producao** | V93: envio direto de audio em 1 toque + calculadora com cruzamento Sup.Aque/Sub.Res e integracao com suporte, 4 selos V93 unificados |
+| **Autoteste interno** | **59/59** na V94 (59 na V93) (botao de status dentro do app) |
+| **Verificacao em producao** | V94: IA Pro topo de linha com base 100% completa desde a 1a resposta, 4 selos V94 unificados |
 | **Pendencias abertas** | Nenhuma pendência crítica |
 | **Pode editar o app agora?** | Somente com autorizacao explicita do USER |
 
-**Ultima atualizacao (o que mudou na V93) - ENVIO DE AUDIO EM 1 TOQUE (WHATSAPP) E DIAGNOSTICO CRUZADO SUP.AQUE + SUB.RES:**
+**Ultima atualizacao (o que mudou na V94) - MODO MAXIMA INTELIGENCIA NA IA DO SUPORTE:**
+1. **Modelo Pro Titular desde a 1a Pergunta (`services/geminiService.ts`, `config/env.ts`):** O Suporte agora usa **`gemini-3.1-pro-preview`** em todos os turnos (inclusive na 1a resposta), com **`gemini-3.8-flash`** atualizado como modelo rápido e fallback automático.
+2. **Base de Conhecimento 100% Completa na 1a Pergunta:** Removida a trava de economia (`includeExtendedKnowledge = true` sempre), enviando o `FAQ_DATABASE` e a `KNOWLEDGE_BASE` estruturada em 4 camadas já no primeiro turno do atendimento.
+3. **Raciocinio Profundo (`thinkingLevel: "medium"`):** Ativado em todas as respostas do Suporte desde a primeira interação.
+4. Alinhados os 4 selos obrigatorios em **V94**: `components/Estrutura.tsx` (`V94.0`), `public/sw.js` (`friotech-ai-v94`), `components/LoginScreen.tsx` (`V94`) e `components/TutorialOverlay.tsx` (`V94` x2).
+
+**Mudanca anterior (o que mudou na V93) - ENVIO DE AUDIO EM 1 TOQUE (WHATSAPP) E DIAGNOSTICO CRUZADO SUP.AQUE + SUB.RES:**
 1. **Envio de Audio em 1 Toque (`Tool_1_Assistant.tsx`):** A barra de gravacao agora exibe previa da transcricao ao vivo e traz o botao laranja **Enviar** que para a gravacao e ja envia o audio imediatamente para a IA em um unico toque (alem do botao de clipe para quem quiser apenas anexar o audio junto com uma foto).
 2. **Cruzamento Automatico `Sup.Aque + Sub.Res` na Calculadora (`Tool_3_Calculator.tsx`):** Adicionado painel opcional para informar tambem o par oposto (Sub-resfriamento ou Superaquecimento) na mesma tela, exibindo os dois calculos lado a lado, o diagnostico cruzado automatico (Falta de fluido/vazamento vs Restricao/filtro secador vs Retorno de liquido vs Alta condensacao) e o botao **"Levar Medidas para o Suporte IA"**.
 3. Alinhados os 4 selos obrigatorios em **V93**: `components/Estrutura.tsx` (`V93.0`), `public/sw.js` (`friotech-ai-v93`), `components/LoginScreen.tsx` (`V93`) e `components/TutorialOverlay.tsx` (`V93` x2).
