@@ -9,17 +9,22 @@
 
 | Campo | Valor |
 |-------|-------|
-| **Data** | 2026-11-18 |
-| **Versao em producao** | **V92** (publicada em 2026-11-18) |
-| **Commit publicado** | V92 (upgrade completo de captacao e interpretacao de audio no suporte: ganho automatico WAV, transcricao fonetica paralela, base eletrica/esquemas ativa em audio e raciocinio medium, selos V92) |
+| **Data** | 2026-11-19 |
+| **Versao em producao** | **V93** (publicada em 2026-11-19) |
+| **Commit publicado** | V93 (envio de audio em 1 toque estilo WhatsApp no suporte + diagnostico cruzado Sup.Aque/Sub.Res na calculadora com botao para levar ao suporte, selos V93) |
 | **Endereco** | https://friotech-ai.vercel.app (exclusivo; dominios antigos bloqueados) |
 | **Repositorio / branch** | `marlonkuhn123-ops/friotech-ai.vercel.app` / `main` |
-| **Autoteste interno** | **59/59** na V92 (59 na V91) (botao de status dentro do app) |
-| **Verificacao em producao** | V92: audio do suporte com normalizacao de ganho, transcricao auxiliar, base completa e protocolo fonetico, 4 selos V92 unificados |
+| **Autoteste interno** | **59/59** na V93 (59 na V92) (botao de status dentro do app) |
+| **Verificacao em producao** | V93: envio direto de audio em 1 toque + calculadora com cruzamento Sup.Aque/Sub.Res e integracao com suporte, 4 selos V93 unificados |
 | **Pendencias abertas** | Nenhuma pendência crítica |
 | **Pode editar o app agora?** | Somente com autorizacao explicita do USER |
 
-**Ultima atualizacao (o que mudou na V92) - UPGRADE COMPLETO DO MICROFONE E INTERPRETACAO DE AUDIO NO SUPORTE:**
+**Ultima atualizacao (o que mudou na V93) - ENVIO DE AUDIO EM 1 TOQUE (WHATSAPP) E DIAGNOSTICO CRUZADO SUP.AQUE + SUB.RES:**
+1. **Envio de Audio em 1 Toque (`Tool_1_Assistant.tsx`):** A barra de gravacao agora exibe previa da transcricao ao vivo e traz o botao laranja **Enviar** que para a gravacao e ja envia o audio imediatamente para a IA em um unico toque (alem do botao de clipe para quem quiser apenas anexar o audio junto com uma foto).
+2. **Cruzamento Automatico `Sup.Aque + Sub.Res` na Calculadora (`Tool_3_Calculator.tsx`):** Adicionado painel opcional para informar tambem o par oposto (Sub-resfriamento ou Superaquecimento) na mesma tela, exibindo os dois calculos lado a lado, o diagnostico cruzado automatico (Falta de fluido/vazamento vs Restricao/filtro secador vs Retorno de liquido vs Alta condensacao) e o botao **"Levar Medidas para o Suporte IA"**.
+3. Alinhados os 4 selos obrigatorios em **V93**: `components/Estrutura.tsx` (`V93.0`), `public/sw.js` (`friotech-ai-v93`), `components/LoginScreen.tsx` (`V93`) e `components/TutorialOverlay.tsx` (`V93` x2).
+
+**Mudanca anterior (o que mudou na V92) - UPGRADE COMPLETO DO MICROFONE E INTERPRETACAO DE AUDIO NO SUPORTE:**
 1. **Captacao e Normalizacao de Ganho (`Tool_1_Assistant.tsx`):** `getUserMedia` com filtros de voz (`echoCancellation`, `noiseSuppression`, `autoGainControl`, `channelCount: 1`), `recorder.start(250)` + `requestData()` para nao cortar o final da fala, e **Peak Normalization automatica no `encodeWav`** (amplifica automaticamente audios baixos gravados longe do celular e remove DC offset).
 2. **Transcricao Fonetica Auxiliar em Paralelo (`SpeechRecognition` pt-BR):** Enquanto grava o audio real, captura em paralelo a transcricao com dicionario fonetico (`R-404A`, `R-22`, `R-407C`, `CLP`, `IHM`, `A1/A2`, `RL6`, `RL18`, `saida YE/YC`, `superaquecimento`, `sub-resfriamento`), permitindo que os motores deterministicos (`analyzeSupportCase`, `ensureElectricalSchematicRoute`) e o historico entre turnos funcionem tambem por voz.
 3. **Base Eletrica/Esquemas Completa + Thinking Medium em Audio (`geminiService.ts`):** Antes, quando o tecnico enviava so audio (sem digitar palavras-chave), `getElectricalContext` retornava vazio e a IA ficava sem os esquemas eletricos. Agora, qualquer mensagem com anexo de audio ativa automaticamente a base eletrica + esquemas + base estendida + protocolo fonetico de campo e `thinkingLevel: "medium"`.

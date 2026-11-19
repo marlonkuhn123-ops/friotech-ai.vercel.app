@@ -659,7 +659,10 @@ export const Tool_Assistant: React.FC = () => {
     const audioChunksRef = useRef<Blob[]>([]);
     const recordTimerRef = useRef<number | null>(null);
     const shouldSaveRecordingRef = useRef(true);
+    const shouldAutoSendRecordingRef = useRef(false);
+    const sendRecordedAudioDirectRef = useRef<(audioFile: SelectedSupportFile) => void>(() => {});
     const [isRecording, setIsRecording] = useState(false);
+    const [liveTranscript, setLiveTranscript] = useState('');
     const [recordSeconds, setRecordSeconds] = useState(0);
     const wasDiagnosticContextCompleteRef = useRef(isDiagnosticContextComplete(restoredSnapshot?.diagnosticContext));
     const diagnosticPanelRef = useRef<HTMLDivElement | null>(null);
@@ -911,8 +914,9 @@ export const Tool_Assistant: React.FC = () => {
         cleanupRecording();
     }, [cleanupRecording]);
 
-    const stopRecording = (shouldSave: boolean) => {
+    const stopRecording = (shouldSave: boolean, autoSend = false) => {
         shouldSaveRecordingRef.current = shouldSave;
+        shouldAutoSendRecordingRef.current = shouldSave && autoSend;
         setIsRecording(false);
 
         if (recordTimerRef.current !== null) {
@@ -997,7 +1001,9 @@ export const Tool_Assistant: React.FC = () => {
             mediaRecorderRef.current = recorder;
             audioChunksRef.current = [];
             speechTranscriptRef.current = '';
+            setLiveTranscript('');
             shouldSaveRecordingRef.current = true;
+            shouldAutoSendRecordingRef.current = false;
 
             // Transcrição auxiliar em paralelo (quando suportada pelo navegador) para reforçar
             // os motores determinísticos locais sem interferir no áudio real enviado ao Gemini
@@ -1015,7 +1021,9 @@ export const Tool_Assistant: React.FC = () => {
                             const piece = event.results[i]?.[0]?.transcript;
                             if (piece) pieces.push(piece.trim());
                         }
-                        speechTranscriptRef.current = normalizeSpokenTechnicalTerms(pieces.join(' '));
+                        const normalized = normalizeSpokenTechnicalTerms(pieces.join(' '));
+                        speechTranscriptRef.current = normalized;
+                        setLiveTranscript(normalized);
                     };
                     recognition.onerror = () => undefined;
                     recognition.start();
@@ -1069,8 +1077,13 @@ export const Tool_Assistant: React.FC = () => {
                             type: 'audio',
                             transcript: capturedTranscript || undefined
                         };
-                        setSelectedFiles(prev => [...prev, audioFile]);
-                        setPendingAttachmentMeta(prev => [...prev, ...buildAttachmentMeta([audioFile])]);
+                        if (shouldAutoSendRecordingRef.current) {
+                            shouldAutoSendRecordingRef.current = false;
+                            sendRecordedAudioDirectRef.current(audioFile);
+                        } else {
+                            setSelectedFiles(prev => [...prev, audioFile]);
+                            setPendingAttachmentMeta(prev => [...prev, ...buildAttachmentMeta([audioFile])]);
+                        }
                     };
                     reader.onerror = () => showSupportAlert('Não consegui anexar o áudio gravado. Tente novamente.');
                     reader.readAsDataURL(finalAudioBlob);
@@ -1218,12 +1231,15 @@ export const Tool_Assistant: React.FC = () => {
     // Mantem os callbacks estáveis apontando para as funções atuais desta renderização.
     retryMessageRef.current = retryMessage;
     sendQuickReplyRef.current = (text: string) => { void sendMessage(text); };
+    sendRecordedAudioDirectRef.current = (audioFile: SelectedSupportFile) => {
+        void sendMessage(undefined, [...selectedFiles, audioFile]);
+    };
 
-    const sendMessage = async (overrideText?: string) => {
+    const sendMessage = async (overrideText?: string, customFiles?: SelectedSupportFile[]) => {
         if (isLoadingChat) return;
 
         let textToSend = (overrideText ?? input).trim();
-        const filesToSend = overrideText ? [] : [...selectedFiles];
+        const filesToSend = customFiles ? [...customFiles] : (overrideText ? [] : [...selectedFiles]);
 
         if (!textToSend && filesToSend.length > 0) {
             textToSend = buildAttachmentDisplayText(filesToSend);
@@ -1494,27 +1510,46 @@ export const Tool_Assistant: React.FC = () => {
                 <div className="mt-auto pt-2 pb-1">
                     <div className="p-2 rounded-[18px] bg-[#c8d1dc]/65 backdrop-blur-xl border border-[#18324f] shadow-[0_12px_24px_rgba(45,63,85,0.24)]">
                         {isRecording ? (
-                            <div className="flex gap-2 items-center">
-                                <div className="flex-1 min-w-0 h-11 rounded-xl px-3 bg-red-500/10 border border-red-500/40 text-red-100 flex items-center gap-2">
-                                    <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse shrink-0"></span>
-                                    <span className="text-[12px] font-black uppercase tracking-[0.12em] truncate">
-                                        Gravando {formatRecordTime(recordSeconds)}
-                                    </span>
+                            <div className="flex flex-col gap-1.5">
+                                {liveTranscript && (
+                                    <div className="px-2.5 py-1 rounded-lg bg-[#18324f]/85 border border-[#00d9ff]/30 text-[11px] text-[#d9f6ff] truncate">
+                                        <i className="fa-solid fa-ear-listen text-[#00d9ff] mr-1.5 text-[10px]"></i>
+                                        {liveTranscript}
+                                    </div>
+                                )}
+                                <div className="flex gap-1.5 items-center">
+                                    <div className="flex-1 min-w-0 h-11 rounded-xl px-3 bg-red-500/15 border border-red-500/45 text-red-100 flex items-center gap-2">
+                                        <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse shrink-0"></span>
+                                        <span className="text-[11.5px] font-black uppercase tracking-[0.1em] truncate">
+                                            Gravando {formatRecordTime(recordSeconds)}
+                                        </span>
+                                    </div>
+                                    <button
+                                        onClick={() => stopRecording(false, false)}
+                                        className="w-10 h-11 rounded-xl bg-[#24354a] border border-[#2f4a67] text-white flex items-center justify-center shrink-0 active:scale-95"
+                                        title="Cancelar gravação"
+                                        aria-label="Cancelar gravação"
+                                    >
+                                        <i className="fa-solid fa-trash-can text-[13px] text-red-300"></i>
+                                    </button>
+                                    <button
+                                        onClick={() => stopRecording(true, false)}
+                                        className="w-10 h-11 rounded-xl bg-[#24354a] border border-[#06c8f6]/50 text-[#00d9ff] flex items-center justify-center shrink-0 active:scale-95"
+                                        title="Apenas anexar áudio (para juntar com foto)"
+                                        aria-label="Anexar áudio gravado"
+                                    >
+                                        <i className="fa-solid fa-paperclip text-[13px]"></i>
+                                    </button>
+                                    <button
+                                        onClick={() => stopRecording(true, true)}
+                                        className="px-3.5 h-11 rounded-xl bg-[#ff6b16] text-white font-black text-[11px] uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-lg shadow-[#9c4b20]/40 shrink-0 active:scale-95 hover:bg-[#ff7f2e]"
+                                        title="Parar e enviar áudio agora"
+                                        aria-label="Enviar áudio agora"
+                                    >
+                                        <span>Enviar</span>
+                                        <i className="fa-solid fa-paper-plane text-[12px]"></i>
+                                    </button>
                                 </div>
-                                <button
-                                    onClick={() => stopRecording(false)}
-                                    className="w-11 h-11 rounded-xl bg-[#24354a] border border-[#2f4a67] text-white flex items-center justify-center shrink-0 active:scale-95"
-                                    aria-label="Cancelar gravação"
-                                >
-                                    <i className="fa-solid fa-xmark text-[15px]"></i>
-                                </button>
-                                <button
-                                    onClick={() => stopRecording(true)}
-                                    className="w-11 h-11 rounded-xl bg-[#06c8f6] border border-[#29dcff] text-white flex items-center justify-center shrink-0 active:scale-95"
-                                    aria-label="Anexar áudio gravado"
-                                >
-                                    <i className="fa-solid fa-check text-[15px]"></i>
-                                </button>
                             </div>
                         ) : (
                             <div className="flex gap-1.5 items-center">
