@@ -107,15 +107,15 @@ export const Tool_Calculator: React.FC = () => {
         try {
             const payload = {
                 fluid,
-                sh: shAudit.ready && shAudit.value !== null ? shAudit.value.toFixed(1) : '',
-                sc: scAudit.ready && scAudit.value !== null ? scAudit.value.toFixed(1) : '',
+                sh: shAudit.ready && shAudit.resultKelvin !== null ? shAudit.resultKelvin.toFixed(1) : '',
+                sc: scAudit.ready && scAudit.resultKelvin !== null ? scAudit.resultKelvin.toFixed(1) : '',
                 updatedAt: Date.now()
             };
             sessionStorage.setItem('friotech_last_calc', JSON.stringify(payload));
         } catch {
             // ignore storage errors
         }
-    }, [fluid, shAudit.ready, shAudit.value, scAudit.ready, scAudit.value]);
+    }, [fluid, shAudit.ready, shAudit.resultKelvin, scAudit.ready, scAudit.resultKelvin]);
 
     const buildLocalResult = () => {
         if (!localAudit.ready) {
