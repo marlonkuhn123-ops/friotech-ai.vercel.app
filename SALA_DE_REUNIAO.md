@@ -9,17 +9,23 @@
 
 | Campo | Valor |
 |-------|-------|
-| **Data** | 2026-11-19 |
-| **Versao em producao** | **V95** (publicada em 2026-11-19) |
-| **Commit publicado** | V95 (Modelo titular atualizado para gemini-4-argon com fallback gemini-3.1-pro-preview, selos V95) |
+| **Data** | 2026-11-20 |
+| **Versao em producao** | **V96** (publicada em 2026-11-20) |
+| **Commit publicado** | V96 (Erros offline + 1 toque, Laudos com WhatsApp/PDF timbrado/puxar da calculadora, Esquemas Eletricos PDF no Suporte e Catalogo, selos V96) |
 | **Endereco** | https://friotech-ai.vercel.app (exclusivo; dominios antigos bloqueados) |
 | **Repositorio / branch** | `marlonkuhn123-ops/friotech-ai.vercel.app` / `main` |
-| **Autoteste interno** | **59/59** na V95 (59 na V94) (botao de status dentro do app) |
-| **Verificacao em producao** | V95: gemini-4-argon ativo como modelo principal em todo o app, 4 selos V95 unificados |
-| **Pendencias abertas** | Nenhuma pendência crítica |
+| **Autoteste interno** | **59/59** na V96 (59 na V95) (botao de status dentro do app) |
+| **Verificacao em producao** | V96: Erros offline instantaneos, Laudos WhatsApp/PDF, Visualizador de 22 PDFs de esquemas eletricos, 4 selos V96 unificados |
+| **Pendencias abertas** | Conectar Login Connection GitHub no painel Vercel do projeto `app-ordemilk` (acao do dono no navegador) |
 | **Pode editar o app agora?** | Somente com autorizacao explicita do USER |
 
-**Ultima atualizacao (o que mudou na V95) - GEMINI 4 ARGON COMO MODELO TITULAR:**
+**Ultima atualizacao (o que mudou na V96) - ERROS OFFLINE, LAUDOS WHATSAPP/PDF E VISUALIZADOR DE ESQUEMAS ELETRICOS (PDF):**
+1. **Aba 2. Erros Offline + 1 Toque (`Tool_2_Errors.tsx`):** Botoes rapidos de controlador (`Full Gauge`, `Ageon`, `CLP Panasonic`, `Soft-Starter MCD 202`), base local offline instantanea para os codigos mais comuns (0s sem internet), botao "Aprofundar com IA" e botao "Levar este Erro para o Suporte IA".
+2. **Aba 5. Servicos / Laudos (`Tool_5_Report.tsx`, `Tool_3_Calculator.tsx`):** Botao **"Puxar da Calculadora"** para importar `Sup.Aque` e `Sub.Res` automaticamente, botao verde **"Enviar no WhatsApp"** e botao **"Gerar PDF FrioTech AI"** com cabecalho timbrado e linhas de assinatura.
+3. **Biblioteca de Esquemas Eletricos PDF (`data/schematics_catalog.ts`, `Tool_1_Assistant.tsx`, `Tool_6_Catalog.tsx`):** Catalogo estruturado dos 22 PDFs oficiais sem duplicar peso no deploy; botoes clicaveis **"Esquema Eletrico Relacionado (PDF)"** direto nas respostas eletricas do Suporte e busca completa na aba Dados Tecnicos.
+4. Alinhados os 4 selos obrigatorios em **V96**: `components/Estrutura.tsx` (`V96.0`), `public/sw.js` (`friotech-ai-v96`), `components/LoginScreen.tsx` (`V96`) e `components/TutorialOverlay.tsx` (`V96` x2).
+
+**Mudanca anterior (o que mudou na V95) - GEMINI 4 ARGON COMO MODELO TITULAR:**
 1. Atualizado `config/env.ts` para usar **`gemini-4-argon`** como modelo titular do Suporte e das ferramentas de IA, com **`gemini-3.1-pro-preview`** como fallback automático.
 2. Alinhados os 4 selos obrigatorios em **V95**: `components/Estrutura.tsx` (`V95.0`), `public/sw.js` (`friotech-ai-v95`), `components/LoginScreen.tsx` (`V95`) e `components/TutorialOverlay.tsx` (`V95` x2).
 

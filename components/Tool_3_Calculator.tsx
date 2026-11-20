@@ -101,6 +101,22 @@ export const Tool_Calculator: React.FC = () => {
         setResult('');
     }, [fluid, press, temp, mode, pairPress, pairTemp]);
 
+    useEffect(() => {
+        if (typeof window === 'undefined' || typeof window.sessionStorage === 'undefined') return;
+        if (!shAudit.ready && !scAudit.ready) return;
+        try {
+            const payload = {
+                fluid,
+                sh: shAudit.ready && shAudit.value !== null ? shAudit.value.toFixed(1) : '',
+                sc: scAudit.ready && scAudit.value !== null ? scAudit.value.toFixed(1) : '',
+                updatedAt: Date.now()
+            };
+            sessionStorage.setItem('friotech_last_calc', JSON.stringify(payload));
+        } catch {
+            // ignore storage errors
+        }
+    }, [fluid, shAudit.ready, shAudit.value, scAudit.ready, scAudit.value]);
+
     const buildLocalResult = () => {
         if (!localAudit.ready) {
             return [

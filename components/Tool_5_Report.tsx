@@ -105,6 +105,105 @@ export const Tool_Report: React.FC = () => {
     const [report, setReport] = useState('');
     const [loading, setLoading] = useState(false);
 
+    const readLastCalc = (): { sh?: string; sc?: string; fluid?: string } | null => {
+        if (typeof window === 'undefined' || typeof window.sessionStorage === 'undefined') return null;
+        try {
+            const raw = sessionStorage.getItem('friotech_last_calc');
+            if (!raw) return null;
+            return JSON.parse(raw);
+        } catch {
+            return null;
+        }
+    };
+
+    const lastCalc = readLastCalc();
+
+    const handleImportFromCalculator = () => {
+        const calc = readLastCalc();
+        if (!calc) return;
+        if (calc.sh) setSuperHeat(calc.sh);
+        if (calc.sc) setSubCooling(calc.sc);
+    };
+
+    const handleSendWhatsApp = () => {
+        if (!report.trim()) return;
+        const header = `*FRIO TECH / AGENTE AI ❄ — ${serviceMode === 'installation' ? 'CERTIFICADO DE ENTREGA TÉCNICA' : 'LAUDO TÉCNICO'}*\nCliente: ${client || 'N/I'} | Data: ${date}\nTécnico: ${techData.name || 'Especialista FrioTech AI'}\n\n`;
+        const cleanBody = report.replace(/\*\*/g, '*');
+        const url = `https://wa.me/?text=${encodeURIComponent(header + cleanBody)}`;
+        window.open(url, '_blank', 'noopener,noreferrer');
+    };
+
+    const handleExportPdf = () => {
+        if (!report.trim() || typeof window === 'undefined') return;
+        const printWin = window.open('', '_blank', 'width=860,height=900');
+        if (!printWin) {
+            alert('Permita pop-ups no navegador para gerar o PDF do laudo.');
+            return;
+        }
+
+        const escapeHtml = (s: string) =>
+            s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        const formattedHtml = escapeHtml(report)
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\n/g, '<br/>');
+
+        const docTitle = serviceMode === 'installation' ? 'CERTIFICADO DE ENTREGA TÉCNICA' : 'RELATÓRIO / LAUDO TÉCNICO DE SERVIÇO';
+        printWin.document.write(`<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<title>${docTitle} - ${escapeHtml(client || 'Cliente')}</title>
+<style>
+  body { font-family: Arial, Helvetica, sans-serif; color: #111827; margin: 32px; line-height: 1.5; }
+  .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #00a8cc; padding-bottom: 14px; margin-bottom: 20px; }
+  .brand { font-size: 24px; font-weight: 900; letter-spacing: -0.5px; color: #0f172a; }
+  .brand span { color: #0099cc; }
+  .doc-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #475569; margin-top: 4px; }
+  .meta-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px 18px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 14px; margin-bottom: 20px; font-size: 13px; }
+  .meta-item strong { color: #334155; text-transform: uppercase; font-size: 11px; display: block; }
+  .params { display: flex; gap: 16px; margin-bottom: 20px; }
+  .param-box { flex: 1; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px 12px; text-align: center; }
+  .param-box span { display: block; font-size: 10px; font-weight: 700; text-transform: uppercase; color: #64748b; }
+  .param-box b { font-size: 16px; color: #0f172a; }
+  .content { font-size: 13px; white-space: normal; border: 1px solid #e2e8f0; border-radius: 8px; padding: 18px; background: #ffffff; }
+  .signatures { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 48px; text-align: center; font-size: 12px; color: #475569; }
+  .sig-line { border-top: 1px solid #334155; padding-top: 8px; }
+  .footer { margin-top: 28px; text-align: center; font-size: 10px; color: #94a3b8; border-top: 1px solid #e2e8f0; padding-top: 10px; }
+  @media print { body { margin: 16px; } }
+</style>
+</head>
+<body>
+  <div class="header">
+    <div>
+      <div class="brand">Frio<span>Tech</span> ❄ <small style="font-size:13px;color:#64748b;">AGENTE AI</small></div>
+      <div class="doc-title">${docTitle}</div>
+    </div>
+    <div style="text-align:right;font-size:12px;color:#475569;">
+      <strong>Data:</strong> ${escapeHtml(date)}<br/>
+      <strong>Equipamento:</strong> ${escapeHtml(model || 'Não informado')}
+    </div>
+  </div>
+  <div class="meta-grid">
+    <div class="meta-item"><strong>Cliente / Fazenda</strong>${escapeHtml(client || 'Não informado')}</div>
+    <div class="meta-item"><strong>Técnico Responsável</strong>${escapeHtml(techData.name || 'Especialista FrioTech AI')}</div>
+  </div>
+  <div class="params">
+    <div class="param-box"><span>Sup.Aque</span><b>${escapeHtml(superHeat || 'N/A')} K</b></div>
+    <div class="param-box"><span>Sub.Res</span><b>${escapeHtml(subCooling || 'N/A')} K</b></div>
+    <div class="param-box"><span>Temp. Final Leite</span><b>${escapeHtml(finalTemp || 'N/A')} °C</b></div>
+  </div>
+  <div class="content">${formattedHtml}</div>
+  <div class="signatures">
+    <div class="sig-line"><strong>${escapeHtml(techData.name || 'Técnico Responsável')}</strong><br/>Assistência Técnica FrioTech AI</div>
+    <div class="sig-line"><strong>${escapeHtml(client || 'Cliente / Responsável')}</strong><br/>Ciente e Aprovado</div>
+  </div>
+  <div class="footer">Documento gerado pelo sistema FrioTech / Agente AI ❄</div>
+  <script>window.onload = function() { window.print(); };</script>
+</body>
+</html>`);
+        printWin.document.close();
+    };
+
     const handleRunTests = () => {
         console.log("--- INICIANDO DIAGNÓSTICO DO SISTEMA ---");
         const report = runSystemDiagnostics();
@@ -241,6 +340,16 @@ Verifique o console do navegador (F12) para ver o resultado detalhado.`);
                         <p className="text-[9px] font-bold uppercase tracking-widest text-slate-500 flex items-center gap-2">
                             <i className="fa-solid fa-gauge-high"></i> Parâmetros
                         </p>
+                        {lastCalc && (lastCalc.sh || lastCalc.sc) && (
+                            <button
+                                type="button"
+                                onClick={handleImportFromCalculator}
+                                className="px-2.5 py-1 rounded-full bg-[#00d9ff]/15 border border-[#00d9ff]/40 text-[#00d9ff] text-[9px] font-black uppercase tracking-wider hover:bg-[#00d9ff]/25 active:scale-95 transition-all"
+                            >
+                                <i className="fa-solid fa-calculator mr-1"></i>
+                                Puxar da Calculadora
+                            </button>
+                        )}
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                         <Input label="Sup.Aque (K)" type="number" value={superHeat} onChange={e => setSuperHeat(e.target.value)} placeholder="0" className="!p-2 text-xs !mb-0 border-orange-500/30" />
@@ -324,6 +433,27 @@ Verifique o console do navegador (F12) para ver o resultado detalhado.`);
                 isLoading={loading}
                 title={serviceMode === 'installation' ? "CERTIFICADO DE ENTREGA TÉCNICA" : "RELATÓRIO DE SERVIÇO"}
             />
+
+            {report && !loading && !report.startsWith('ERRO AO GERAR') && (
+                <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <button
+                        type="button"
+                        onClick={handleSendWhatsApp}
+                        className="w-full py-3 px-4 rounded-xl bg-[#16a34a] hover:bg-[#15803d] text-white font-black text-[11px] uppercase tracking-widest flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-all"
+                    >
+                        <i className="fa-brands fa-whatsapp text-sm"></i>
+                        <span>Enviar no WhatsApp</span>
+                    </button>
+                    <button
+                        type="button"
+                        onClick={handleExportPdf}
+                        className="w-full py-3 px-4 rounded-xl bg-[#1e293b] hover:bg-[#26354d] border border-[#00d9ff]/40 text-[#00d9ff] font-black text-[11px] uppercase tracking-widest flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-all"
+                    >
+                        <i className="fa-solid fa-file-pdf text-sm"></i>
+                        <span>Gerar PDF FrioTech AI</span>
+                    </button>
+                </div>
+            )}
         </div>
     );
 };

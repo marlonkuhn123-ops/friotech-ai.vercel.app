@@ -4,12 +4,18 @@ import { Card, SectionTitle, Button, Select, Input, AIOutputBox } from './UI';
 import { knowledgeService } from "../services/knowledgeService";
 import { FieldTip } from "../types";
 import { BOM_DATABASE } from "../bom_database";
+import {
+    SCHEMATICS_CATALOG,
+    getSchematicDownloadUrl,
+    getSchematicViewerUrl
+} from "../data/schematics_catalog";
 
 export const Tool_Catalog: React.FC = () => {
     // Inicializa com o primeiro modelo da lista nova para evitar estado vazio
     const [selectedModel, setSelectedModel] = useState(Object.keys(BOM_DATABASE)[0] || '');
     const [result, setResult] = useState('');
     const [loading, setLoading] = useState(false);
+    const [schematicSearch, setSchematicSearch] = useState('');
     // Cada consulta recebe um número. Trocar o modelo invalida a consulta anterior,
     // para a ficha de um modelo nunca aparecer sob o título de outro.
     const requestIdRef = useRef(0);
@@ -81,6 +87,61 @@ export const Tool_Catalog: React.FC = () => {
                 </Button>
                 
                 <AIOutputBox content={result} isLoading={loading} title={`FICHA TÉCNICA: ${selectedModel}`} />
+            </Card>
+
+            <SectionTitle icon="fa-solid fa-file-pdf" title="ESQUEMAS ELÉTRICOS OFICIAIS (PDF)" />
+            <Card className="mb-6 border-t-4 border-t-[#f97316] !mt-4">
+                <p className="text-[10px] text-[#9ca7b8] mb-3 leading-relaxed">
+                    Consulte e dê zoom nos diagramas oficiais direto no celular. Pesquise por capacidade, tensão ou painel (ex: <span className="text-white font-bold">20000</span>, <span className="text-white font-bold">6000</span>, <span className="text-white font-bold">CIP</span>, <span className="text-white font-bold">380V</span>, <span className="text-white font-bold">remota</span>).
+                </p>
+                <Input
+                    placeholder="Buscar esquema elétrico (ex: 20000, CIP, 380V)..."
+                    value={schematicSearch}
+                    onChange={e => setSchematicSearch(e.target.value)}
+                    className="!mb-3 !p-3 text-xs"
+                />
+                <div className="space-y-2 max-h-72 overflow-y-auto no-scrollbar">
+                    {SCHEMATICS_CATALOG.filter(item => {
+                        const q = schematicSearch.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+                        if (!q) return true;
+                        const hay = `${item.title} ${item.category} ${item.voltage} ${item.keywords.join(' ')}`
+                            .normalize('NFD')
+                            .replace(/[\u0300-\u036f]/g, '')
+                            .toLowerCase();
+                        return hay.includes(q);
+                    }).map(item => (
+                        <div key={item.id} className="bg-[#111827]/75 border border-[#334155] rounded-xl p-3 flex flex-col gap-2">
+                            <div className="flex items-start justify-between gap-2">
+                                <div>
+                                    <p className="text-[11px] font-bold text-white leading-snug">{item.title}</p>
+                                    <p className="text-[9px] text-[#9ca7b8] uppercase tracking-wider mt-0.5">
+                                        {item.category} • <span className="text-[#00d9ff] font-bold">{item.voltage}</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="flex gap-2">
+                                <a
+                                    href={getSchematicViewerUrl(item.filename)}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex-1 py-2 px-3 rounded-lg bg-[#00d9ff]/15 hover:bg-[#00d9ff]/25 border border-[#00d9ff]/40 text-[#00d9ff] text-[10px] font-black uppercase tracking-wider text-center transition-all"
+                                >
+                                    <i className="fa-solid fa-magnifying-glass-plus mr-1.5"></i>
+                                    Visualizar PDF
+                                </a>
+                                <a
+                                    href={getSchematicDownloadUrl(item.filename)}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="py-2 px-3 rounded-lg bg-[#1e293b] hover:bg-[#2a3950] border border-white/15 text-white/85 text-[10px] font-bold uppercase tracking-wider text-center transition-all"
+                                >
+                                    <i className="fa-solid fa-download mr-1"></i>
+                                    Baixar
+                                </a>
+                            </div>
+                        </div>
+                    ))}
+                </div>
             </Card>
 
             <SectionTitle icon="fa-solid fa-brain" title="MEMÓRIA DE CAMPO (A IA APRENDE AQUI)" />

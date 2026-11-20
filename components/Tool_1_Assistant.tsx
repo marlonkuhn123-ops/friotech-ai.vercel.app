@@ -3,6 +3,10 @@ import { generateChatResponseStream } from '../services/geminiService';
 import { localSupportService } from '../services/localSupportService';
 import { supportSessionService } from '../services/supportSessionService';
 import {
+    matchSchematicsForSupportMessage,
+    getSchematicViewerUrl
+} from '../data/schematics_catalog';
+import {
     ChatMessage,
     Refrigerant,
     SupportAttachmentMeta,
@@ -561,6 +565,33 @@ const ChatBubble: React.FC<{
                             <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse [animation-delay:240ms]"></span>
                         </div>
                     )}
+
+                    {isModel && hasText && !msg.isStreaming && !isError && msg.id !== 'welcome' && (() => {
+                        const matchedPdfs = matchSchematicsForSupportMessage(displayText);
+                        if (matchedPdfs.length === 0) return null;
+                        return (
+                            <div className="mt-3 pt-2.5 border-t border-[#24425f]/25 flex flex-col gap-1.5">
+                                <p className="text-[10px] font-black uppercase tracking-wider text-[#073b57]">
+                                    <i className="fa-solid fa-file-pdf text-[#ff6600] mr-1.5"></i>
+                                    Esquema Elétrico Relacionado (PDF):
+                                </p>
+                                <div className="flex flex-wrap gap-1.5">
+                                    {matchedPdfs.map(pdf => (
+                                        <a
+                                            key={pdf.id}
+                                            href={getSchematicViewerUrl(pdf.filename)}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="inline-flex items-center gap-1.5 text-[11px] font-bold px-3 py-1.5 rounded-xl bg-[#18324f] text-[#00d9ff] border border-[#00d9ff]/40 hover:bg-[#1f4066] active:scale-95 transition-all"
+                                        >
+                                            <i className="fa-solid fa-up-right-from-square text-[10px]"></i>
+                                            <span>{pdf.title}</span>
+                                        </a>
+                                    ))}
+                                </div>
+                            </div>
+                        );
+                    })()}
 
                     {isModel && hasText && !msg.isStreaming && ttsSupported && onSpeak && (
                         <button
