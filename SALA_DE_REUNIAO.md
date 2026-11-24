@@ -9,14 +9,14 @@
 
 | Campo | Valor |
 |-------|-------|
-| **Data** | 2026-11-20 |
-| **Versao em producao** | **V96** (publicada em 2026-11-20) |
-| **Commit publicado** | V96 (Erros offline + 1 toque, Laudos com WhatsApp/PDF timbrado/puxar da calculadora, Esquemas Eletricos PDF no Suporte e Catalogo, selos V96) |
-| **Endereco** | https://friotech-ai.vercel.app (exclusivo; dominios antigos bloqueados) |
+| **Data** | 2026-11-24 |
+| **Versao em producao** | **V96** (publicada em 2026-11-24 na conta pessoal `marlonkuhn123@gmail.com` / projeto `friotech-ai`, deploy `dpl_9SisJc8SH1wCAmcgmKksR3kiKMev`) |
+| **Commit publicado** | V96 (`c02ad37`: icone HD `❄AI`, `gemini-4-argon`, Erros offline + 1 toque, Laudos com WhatsApp/PDF timbrado/puxar da calculadora, Esquemas Eletricos PDF no Suporte e Catalogo, selos V96) |
+| **Endereco** | https://friotech-ai.vercel.app (exclusivo; projeto renomeado para `friotech-ai` na conta `marlonkuhn123@gmail.com`) |
 | **Repositorio / branch** | `marlonkuhn123-ops/friotech-ai.vercel.app` / `main` |
 | **Autoteste interno** | **59/59** na V96 (59 na V95) (botao de status dentro do app) |
-| **Verificacao em producao** | V96: Erros offline instantaneos, Laudos WhatsApp/PDF, Visualizador de 22 PDFs de esquemas eletricos, 4 selos V96 unificados |
-| **Pendencias abertas** | Conectar Login Connection GitHub no painel Vercel do projeto `app-ordemilk` (acao do dono no navegador) |
+| **Verificacao em producao** | V96 + icone HD `❄AI` (`icon-512.png?v=96`) + `gemini-4-argon` verificados ao vivo em `https://friotech-ai.vercel.app` |
+| **Pendencias abertas** | Opcional: conectar GitHub no painel Vercel da conta `marlonkuhn123@gmail.com` (projeto `friotech-ai`) para deploy automatico no push |
 | **Pode editar o app agora?** | Somente com autorizacao explicita do USER |
 
 **Ultima atualizacao (o que mudou na V96) - ERROS OFFLINE, LAUDOS WHATSAPP/PDF E VISUALIZADOR DE ESQUEMAS ELETRICOS (PDF):**
